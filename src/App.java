@@ -2,6 +2,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Scanner; //importar el scanner para ingreso de datos
 import java.time.LocalDate;
+import java.io.*;  // Import para MANEJO DE ARCHIVOOS
 
 
 public class App {
@@ -12,9 +13,11 @@ public class App {
 
     //--------Constructor-----------
     public App(){
-        listaToDos= new LinkedList<>();  //Creamos la nueva linkedList
-        sc = new Scanner(System.in); //
+        listaToDos= new LinkedList<>();  //Creamos la nueva linkedList de To-Dos
+        sc = new Scanner(System.in); //Iniciamos el Scanner
         System.out.println("-------APLICACION INICIADA-------");
+        //CARGAR DATOS desde ARCHIVO AL INICIAR
+        cargarDatos();
     }
 
 
@@ -441,6 +444,9 @@ public class App {
         System.out.println("    8. Ver todas las completadas (TODOS)");
         System.out.println("    9. Buscar tareas por texto");
         System.out.println("");
+        System.out.println("  SISTEMA:");
+        System.out.println("   10. Guardar datos manualmente");  // Metodo para Guardar en Archivos
+        System.out.println("");
         System.out.println("    0. Salir");
         System.out.println("---------------------------------------------");
         System.out.print("Seleccione una opción: ");
@@ -486,9 +492,16 @@ public class App {
                 case 9:
                     buscarTareasPorTexto();
                     break;
-                case 0:
-                    System.out.println("\n CERRANDO APLICACION..........");
+                case 10:
+                    guardarDatos();
                     break;
+                case 0:
+
+                    System.out.println("\n Guardando datos en archivo...");
+                    guardarDatos();  // GUARDAR datos ANTES DE SALIR
+                    System.out.println("CERRANDO APLICACION..........");
+                    break;
+
                 default:
                     System.out.println("\n Opción inválida. Intente nuevamente.");
             }
@@ -497,6 +510,145 @@ public class App {
 
         sc.close();
     }
+
+
+    //-----------METODOS PARA GUARDAR EN ARCHIVOOOOOOOSSS----------------
+
+
+    // 1) Métod0 para GUARDAR todos los datos en archivo
+    public void guardarDatos(){
+        try {
+            // Crear archivo (se crea en la carpeta del proyecto)
+            FileWriter fw = new FileWriter("datos/ToDos.txt");
+            //Archivo de nombre "ToDos" de tipo txt en la carpeta "datos"
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            // Recorrer todos los ToDos
+            ListIterator<ToDo> itToDos = listaToDos.listIterator();
+
+            //RECORRER TODOS LOS TO-DO con iterator
+            while(itToDos.hasNext()){
+                ToDo todo = itToDos.next();
+
+                // Guardar información del To-Do
+                //getFechaCreacionL --- getter para acceder a la fecha de creacion del TO-Do
+                bw.write("TO-DO|" + todo.getNameToDo() + "|" + todo.getFechaCreacionL());
+                bw.newLine();  //Salto de Linea
+
+                // Guardar todas las tareas de este To-Do
+                LinkedList<Tarea> tareas = todo.getTareas();
+
+                for(Tarea t : tareas){
+                    bw.write("TAREA|" +
+                            t.getDesc() + "|" +
+                            t.getPrioridad() + "|" +
+                            t.getFecha() + "|" +
+                            t.getStatus());
+                    bw.newLine(); //Salto de Linea
+                }
+
+                // Separador entre ToDos
+                bw.write("---");
+                bw.newLine();
+            }
+
+            bw.close(); //Cierro BufferedWriter
+            fw.close(); //Cierro FileWriter
+
+            System.out.println(" Datos guardados exitosamente en 'datos/todos.txt'");
+
+
+            //CATCH en caso de error
+        } catch (IOException e) {
+            System.out.println("Error al guardar datos en archivo: " + e.getMessage());
+        }
+    }
+
+
+
+    // 2) Métod0 para CARGAR datos desde el archivo
+    public void cargarDatos(){
+        try {
+            File archivo = new File("datos/todos.txt");
+
+            // Si el archivo no existe, no hacer nada
+            if(!archivo.exists()){
+                System.out.println("No hay datos guardados previos.");
+                return;
+            }
+
+            //Inicio FileReader y BufferedReader
+            FileReader fr = new FileReader(archivo);
+            BufferedReader br = new BufferedReader(fr);
+
+            String linea;
+            ToDo todoActual = null;
+
+
+            //While que recorre todas las lineas del archivo
+            //Condicion, que la linea NO SEA NULL
+            while((linea = br.readLine()) != null) {
+
+                // Ignorar líneas vacías o separadores
+                // si "---" OR ""
+                if (linea.equals("---") || linea.trim().isEmpty()) {
+                    continue;
+                }
+
+                //---SI LA LINEA NO ESTA VACIA--
+                // Separar la línea por el delimitador |
+                //Array de las partes de la linea
+                String[] partes = linea.split("\\|");
+
+                // Si es un To-Do
+                //TO-DO | nombreTo-Do | fecha
+                if (partes[0].equals("TO-DO")) {
+                    String nombre = partes[1];
+                    // Crear nuevo To-Do
+                    todoActual = new ToDo(nombre);
+                    listaToDos.add(todoActual);
+
+
+                // SI ES UNA TAREA
+                // "TAREA|"  partes [0]
+                // t.getDesc()  partes [1]
+                // t.getPrioridad() partes [2]
+                // t.getFecha()  partes [3]
+                // t.getStatus() partes [4]
+
+            }else if(partes[0].equals("TAREA") && todoActual != null){
+                    String desc = partes[1];
+                    String prioridad = partes[2];
+                    LocalDate fecha = LocalDate.parse(partes[3]); //Convertir String en LocalDate
+                    String status = partes[4];
+
+                    // Crear tarea
+                    Tarea tarea = new Tarea(desc, fecha, prioridad);
+                    tarea.setStatus(status);  // Restaurar el status de la Tarea (que no sea Pendiente por Defecto)
+
+                    // Agregar al To-Do actual
+                    todoActual.addTarea(tarea);
+                }
+            }
+
+            br.close();  //Cierro BufferedReader
+            fr.close(); //Cierro FileReader
+
+            System.out.println(" Datos cargados exitosamente desde 'datos/todos.txt'");
+
+            //EXCEPCION EN CASO DE ERROR
+        } catch (IOException e) {
+            System.out.println(" Error al cargar datos: " + e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
 
 
 
