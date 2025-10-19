@@ -1,5 +1,4 @@
 import java.time.LocalDate; //Importo LocalDate
-import java.util.LinkedList;
 
 public class Tarea {
 //Tareas deben tener descripción, fecha máxima y prioridad (alta, media, baja)
@@ -31,18 +30,17 @@ public class Tarea {
     public void setPrioridad(String prioridad){this.prioridad=prioridad;}
 
     public String getStatus(){return status;    }
-    //No necesito crear un setEstado - no me conviene para este ejercicio
-
+    public void setStatus(String status){this.status=status;}
 
 //METODO to String de tarea
     @Override
     public String toString(){
-        String s= "Tarea: "+desc+ "\n-Prioridad: "+ prioridad+"\n-Fecha Maxima: "+ fecha+"\n-Status: "+status;
+        String s= "Tarea: "+desc+ "\n-Prioridad: "+ prioridad+"\n-Fecha Maxima: "+ fecha+"\n-Status: "+status+"\n";
 
         return s;
     }
 
-    //Metodo para cambiar status
+    //Metodo para cambiar status (COMPLETAR TAREA)
     public void completarTarea(){
         this.status="Completado"; //Cambia el estado de la tarea
     }
@@ -50,39 +48,5 @@ public class Tarea {
     public void descompletarTarea(){
         this.status = "Pendiente";
     }
-
-
-    //--------METODO PARA COMPARATOR / METODO VISTA DE TAREAS PENDIENTES---------
-    public static void mostrarTareasPendientesOrdenadas(LinkedList<Tarea> listaTareas) {
-        // Filtrar las pendientes
-        LinkedList<Tarea> pendientes = new LinkedList<>();
-
-        for (Tarea t : listaTareas) {
-            if (t.getStatus().equalsIgnoreCase("Pendiente")) {
-                pendientes.add(t);
-            }
-        }
-
-        // Ordenar por prioridad usando ComparatorPrioridad
-        pendientes.sort(new ComparatorPrioridad());
-
-        // Mostrar
-        System.out.println("\n--- TAREAS PENDIENTES ORDENADAS POR PRIORIDAD ---");
-        if (pendientes.isEmpty()) {
-            System.out.println("No hay tareas pendientes.");
-            return; //Salir de Metodo
-        }
-
-        for (Tarea t : pendientes) {
-            System.out.println("- " + t.getDesc() + " | Prioridad: " + t.getPrioridad() +
-                    " | Fecha: " + t.getFecha());
-        }
-    }
-
-
-
-
-
-
 
 }

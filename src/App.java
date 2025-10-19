@@ -21,8 +21,8 @@ public class App {
     //------METODOS DE AUXILIARES PARA LA APP-----
 //Metodos Private que se usaran para otros metodos
 
-    //*** 1) BUSCAR TODO POR NOMBRE
-    //Retorna el ToDo , null si no existe
+    //*** 1) BUSCAR TO-Do POR NOMBRE
+    //Retorna el To-Do ,o  NULL si no existe
     //Parametros: Nombre del ToDo
 
     private ToDo buscarToDoNombre(String nombre){
@@ -40,15 +40,6 @@ public class App {
         return null; //En caso que no se haya encontrado el nombre del ToDo
     }
 
-    //*** 2) VERIFICAR SI EXISTE UN TODO CON ESE NOMBRE
-    //Devuelve un booleano
-    private boolean existeToDo(String nombre){
-                        //buscarToDo devuelve un ToDo o un null
-                        //ToDo != null == TRUE -- En caso de encontrarlo
-                        //null != null == FALSE -- En caso de no encontrarlo
-        boolean existe= buscarToDoNombre(nombre) !=null;
-        return existe;
-    }
 
 
     //------------METODOS PRINCIPALES---------
@@ -57,13 +48,14 @@ public class App {
         System.out.println("\nIngrese nombre del nuevo ToDo: ");
         String nombre= sc.nextLine();
 
-        //Verificar si ya existe un todo con ese nombre
-        if(existeToDo(nombre)){
+        ToDo toDoSeleccionado = buscarToDoNombre(nombre);
+
+        if(toDoSeleccionado != null){
             System.out.println("Ya existe un ToDo con ese nombre");
-            return; //Salir del metodo
+            return;
         }
 
-        //Else - no existe un ToDo con ese nombre
+        //Else - no existe un To-Do con ese nombre
         ToDo nuevoToDo= new ToDo(nombre);
 
         listaToDos.add(nuevoToDo); //Agregar al final de la lista
@@ -117,14 +109,15 @@ public class App {
             String nombreToDo =sc.nextLine();
 
             //Buscar si existe un ToDo con ese nombre en la App
-            if(existeToDo(nombreToDo)==false){
-                System.out.println("Porfavor ingrese un nombre de ToDo valido\n");
-                return; //Sale del metodo
+            ToDo toDoselect = buscarToDoNombre(nombreToDo);
+
+            if(toDoselect == null){
+                System.out.println("No existe un ToDo con ese nombre");
+                return; //sale del metodo
             }
 
             //Como ya verifique que exisita el ToDo
-            //Puedo buscarlo por nombre
-            ToDo toDoselect = buscarToDoNombre(nombreToDo);
+            //Puedo proceder a agregar la tarea
 
             //En caso de que el ToDo existe, pedir datos de la Tarea a ingresar
             System.out.println("\nProporcione datos de la Tarea a agregar-");
@@ -157,144 +150,126 @@ public class App {
         }
 
 
-
-    //*** 4) Ver todas las tareas de un ToDo específico
+    //*** 4) Ver todas las tareas de un To-Do específico
     public void verTareasDeToDo(){
         // Verificar que haya ToDos
         if(listaToDos.isEmpty()){
             System.out.println("\nNo hay listas de ToDo disponibles.");
             return; //Sale del Metodo
         }
-
         // Mostrar ToDos disponibles
         verToDos();
 
-        // Pedir cuál ToDo ver
+        // Pedir cuál To-Do ver
         System.out.print("Ingrese el nombre del ToDo a visualizar: ");
         String nombreToDo = sc.nextLine();
 
-        //Buscar si existe un ToDo con ese nombre en la App
-        if(existeToDo(nombreToDo)==false){
+        ToDo toDoselect = buscarToDoNombre(nombreToDo);
+
+        if(toDoselect == null){
+            System.out.println("No existe un ToDo con ese nombre");
             System.out.println("Porfavor ingrese un nombre de ToDo valido\n");
             return; //Sale del metodo
         }
 
-        //Como existe el ToDo puedo buscarlo por nombre
-        ToDo toDoselect = buscarToDoNombre(nombreToDo);
-
-        // Mostrar el ToDo completo
-        System.out.println("\n" + toDoselect.toString());
+        //Como ya verifique el To-Do existia, puedo
+        // Mostrar el To-Do completo
+        System.out.println("\n" + toDoselect);
     }
 
 
-    //*** 5) MÉTODO OBLIGATORIO - Recuperar solo las tareas de una prioridad dada de todos los ToDos
+    //*** 5) MÉTOD0 OBLIGATORIO - Recuperar solo las tareas de una prioridad dada de todos los ToDos
+    //Buscar todas las tareas de una cierta prioridad en un Lista de ToDos
     public void verTareasPorPrioridad(){
         System.out.print("\nIngrese la prioridad a buscar (Alta/Media/Baja): ");
         String prioridadBuscada = sc.nextLine();
 
         System.out.println("\n------ TAREAS CON PRIORIDAD: " + prioridadBuscada + " ----------");
 
-        boolean encontroTareas = false; // Variable local para verificar si hay TAREAS en algun ToDO
+        //Caso 0 : Verificar que halla ToDos en la APP
+        if(listaToDos.isEmpty()){
+            System.out.println(" No hay ningun ToDo creado ");
+            System.out.println(" Volviendo al menu principal ");
+            System.out.println("----------------\n");
+            return; //Salir del metodo
+        }
 
+        //Variable local booleana para verificar si encuentra ToDos con esa prioridad en la APP en general
+        boolean encontroPrioridad=false;
 
-
+        //Ahora que verificamos que si hay ToDos en la APP :
         // Recorrer TODOS los ToDos con iterator
         ListIterator<ToDo> itToDos = listaToDos.listIterator();
 
+        //------------------------------
+        //BUCLE WHILE PARA RECORRER TODOS LOS TO-DOs
         while(itToDos.hasNext()){
-            ToDo toDo = itToDos.next(); // ToDo actual
+            ToDo toDo = itToDos.next(); // To-Do actual
 
-            System.out.println("\n--- Lista: " + toDo.getNameToDo() + " ---");
+            //Ver las tareaas de esa prioridad del To-Do actual
+            LinkedList<Tarea> resultado= toDo.verPrioridad(prioridadBuscada);
 
-            boolean hayEnEsteLista = false;  //Variable local para ver si hay tareas en ese ToDo
+            if (resultado.isEmpty()) {
+                System.out.println("No hay tareas con esa Prioridad en el ToDo: "+toDo.getNameToDo());
+            }else{
+                System.out.println("Tareas con Prioridad: "+ prioridadBuscada+" en el ToDo "+ toDo.getNameToDo());
+                encontroPrioridad=true; //Variable local pasa a ser True
 
-            // Obtener las tareas(LinkedList) de este ToDo
-            LinkedList<Tarea> tareas = toDo.getTareas(); //getTareas, obtiene la LinkedList del toDo
-
-            tareas.sort(new ComparatorPrioridad()); // Ordena por prioridad antes de mostrar
-
-            //Iterador para recorrer las tareas
-            ListIterator<Tarea> itTareas = tareas.listIterator();
-
-            // Recorrer todas las tareas de este ToDo
-            while(itTareas.hasNext()){
-                Tarea tarea = itTareas.next();
-
-                // Comparar prioridad de cada tarea
-                if(tarea.getPrioridad().equalsIgnoreCase(prioridadBuscada)){
-                    System.out.println("  - " + tarea.getDesc());
-                    System.out.println("    Fecha: " + tarea.getFecha() +
-                            " | Status: " + tarea.getStatus());
-                    hayEnEsteLista = true;  //Tarea con prioridad buscada encontrada
-                    encontroTareas = true;  //Tareas en general encontradaas
+                //Imprimir cada Tarea de la lista resultante
+                for(Tarea t:resultado){
+                    System.out.println(t);
                 }
             }
-
-            // Si no hay tareas con esa prioridad en esta lista
-            if(!hayEnEsteLista){
-                System.out.println("  No hay tareas con esa prioridad en esta lista.");
-            }
-        }
-
-        //SALIENDO DEL WHILE
-        // Si no se encontraron tareas en ningún ToDo
-        if(!encontroTareas){
-            System.out.println("\nNo se encontraron tareas con la prioridad '" + prioridadBuscada + " en nigun ToDO");
+        }  //SALIENDO DEL WHILE
+        if (encontroPrioridad==false){
+            System.out.println("NO SE ENCONTRO NINGUNA TAREA CON PRIORIDAD -"+prioridadBuscada+"- EN LA APP");
         }
 
         System.out.println("----------------------------------------------------\n");
     }
 
 
-
-
-    //*** 6) MÉTODO OBLIGATORIO - Recuperar todas las tareas marcadas como hechas de todos los ToDO
+    //*** 6) MÉTOD0 OBLIGATORIO - Recuperar todas las tareas marcadas como hechas de todos los To-DO
+    //Buscar todas las tareas cumplidas en un Lista de ToDos
     public void verTodasLasCompletadas(){
         System.out.println("\n-------TODAS LAS TAREAS COMPLETADAS-----------");
 
-        boolean hayCompletadas = false; // Variable bandera
+        //Caso 0 : Verificar que halla ToDos en la APP
+        if(listaToDos.isEmpty()){
+            System.out.println(" No hay ningun ToDo creado ");
+            System.out.println(" Volviendo al menu principal ");
+            System.out.println("----------------\n");
+            return; //Salir del metodo
+        }
+        //Como ya verificamos que si hay ToDos, seguimos:
+
+        boolean encontroCompletadas = false; // Variable bandera para ver si hay completadas en la APP EN GENERAL
 
         // Recorrer TODOS los ToDos con iterator
         ListIterator<ToDo> itToDos = listaToDos.listIterator();
 
-        while(itToDos.hasNext()){
-            ToDo toDo = itToDos.next(); // ToDo actual
+        //----BUCLE WHILE----
+        while(itToDos.hasNext()) {
+            ToDo toDo = itToDos.next(); // To-Do actual
 
-            System.out.println("\n--- Lista: " + toDo.getNameToDo() + " ---");
+            LinkedList<Tarea> resultado = toDo.verCompletadas();
 
-            boolean hayEnEsteLista = false;
+            if (resultado.isEmpty()) {
+                System.out.println("No hay tareas COMPLETADAS en el ToDo: " + toDo.getNameToDo());
+            } else {
+                System.out.println("Tareas COMPLETADAS en el ToDo " + toDo.getNameToDo());
+                encontroCompletadas = true; //Variable local pasa a ser True
 
-            // Obtener las tareas de este ToDo
-            LinkedList<Tarea> tareas = toDo.getTareas();
-            tareas.sort(new ComparatorStatus()); // Ordenar por status antes de recorrer
-            ListIterator<Tarea> itTareas = tareas.listIterator();
-
-            // Recorrer todas las tareas buscando completadas
-            while(itTareas.hasNext()){
-                Tarea tarea = itTareas.next();
-
-                // Si la tarea está completada
-                if(tarea.getStatus().equals("Completado")){
-
-                    System.out.println("  - " + tarea.getDesc());
-                    System.out.println("    Prioridad: " + tarea.getPrioridad() +
-                            " | Fecha: " + tarea.getFecha());
-                    hayEnEsteLista = true;
-                    hayCompletadas = true;
+                //Imprimir cada Tarea de la lista resultante
+                for (Tarea t : resultado) {
+                    System.out.println(t);
                 }
             }
-
-            // Si no hay completadas en esta lista
-            if(!hayEnEsteLista){
-                System.out.println("  No hay tareas completadas en esta lista.");
-            }
         }
-
-        // Si no hay completadas en ningún ToDo
-        if(!hayCompletadas){
-            System.out.println("\nNo hay tareas completadas en ningún ToDo.");
+        //Saliendo del While
+        if (encontroCompletadas==false){
+            System.out.println("NO SE ENCONTRARON TAREAS COMPLETADAS EN LA APP");
         }
-
         System.out.println("---------------------------------------\n");
     }
 
@@ -304,13 +279,13 @@ public class App {
         // Verificar que haya ToDos
         if(listaToDos.isEmpty()){
             System.out.println("\nNo hay listas de ToDo disponibles.");
-            return;
+            return; //Sale del metodo
         }
 
         // Mostrar ToDos
         verToDos();
 
-        // Seleccionar ToDo
+        // Seleccionar To-Do
         System.out.print("Ingrese el nombre del ToDo: ");
         String nombreToDo = sc.nextLine();
 
@@ -318,66 +293,44 @@ public class App {
 
         if(toDoSeleccionado == null){
             System.out.println("No existe un ToDo con ese nombre");
-            return;
+            return; //Sale del metodo
         }
 
-        // Obtener las tareas de este ToDo
-        LinkedList<Tarea> tareas = toDoSeleccionado.getTareas();
+        // Obtener las tareas pendientes de este To-Do
+        LinkedList<Tarea> pendientes = toDoSeleccionado.verPendientes();
 
-        // Verificar que haya tareas
-        if(tareas.isEmpty()){
-            System.out.println("\nNo hay tareas en esta lista.");
-            return;
+        // Verificar que haya tareas pendientes en este To-Do
+        if(pendientes.isEmpty()){
+            System.out.println("\nNo hay tareas pendientes en este ToDo");
+            return; //Salir del metodo
         }
 
-        // Mostrar tareas pendientes con iterator
-        System.out.println("\n--- Tareas Pendientes ---");
-
-        //Iterador de tareaas
-        ListIterator<Tarea> it = tareas.listIterator();
-
-        boolean hayPendientes = false;
-        int contador = 1;
-
-        //Recorrer Tareas
-        while(it.hasNext()){
-            Tarea tarea = it.next();
-            if(tarea.getStatus().equals("Pendiente")){
-                System.out.println(contador + ") " + tarea.getDesc() +
-                        " | Prioridad: " + tarea.getPrioridad());
-
-                hayPendientes = true;
-                contador++;
-            }
-        }
-
-        // Si no hay pendientes
-        if(!hayPendientes){
-            System.out.println("No hay tareas pendientes en esta lista.");
-            return; //Sale del Metodo
+        //Como ya verificamos que si hay pendientes
+        System.out.println("---TAREAS PENDIENTES EN EL TO-DO "+ toDoSeleccionado.getNameToDo()+"---");
+        for(Tarea t: pendientes){
+            System.out.println(t);
         }
 
         // Pedir cuál completar
         System.out.print("\nIngrese la descripción de la tarea a completar: ");
         String descBuscada = sc.nextLine();
 
-        // Buscar y completar con iterator
-        ListIterator<Tarea> itBuscar = tareas.listIterator();
-        boolean encontrada = false;
+        // RECORRER LA LISTA DE PENDIENTES con Iterator
+        ListIterator<Tarea> it = pendientes.listIterator();
+        boolean encontrada = false; //Variable bandera
 
-        //Volver a Iterar las tareas para buscar
-        while(itBuscar.hasNext()){
-            Tarea tarea = itBuscar.next();
+        while(it.hasNext()){
+            Tarea t= it.next();
 
-            if(tarea.getDesc().equalsIgnoreCase(descBuscada) && tarea.getStatus().equals("Pendiente")){
-                tarea.completarTarea();
-                System.out.println(" Tarea '" + tarea.getDesc() + "' marcada como completada.");
+            if(t.getDesc().equals(descBuscada) ) {
+                t.completarTarea();  // COMPLETAR la tarea
+                System.out.println("Tarea '" + t.getDesc() + "' completada exitosamente.");
                 encontrada = true;
-                break;
+                break;  // Salir después de completar
             }
         }
 
-        if(!encontrada){
+        if(encontrada==false){
             System.out.println(" No se encontró una tarea pendiente con esa descripción.");
         }
     }
@@ -388,19 +341,18 @@ public class App {
         System.out.print("\nIngrese el texto a buscar: ");
         String textoBuscado = sc.nextLine().toLowerCase();
 
-        System.out.println("\n--------- RESULTADOS DE BÚSQUEDA: '" + textoBuscado + "' -----");
+        System.out.println("\n--------- RESULTADOS DE LA BÚSQUEDA -------");
 
-        boolean encontro = false;
+        boolean encontro = false; //Variable bandera para todos los TO-Dos
 
         // Recorrer TODOS los ToDos con iterator
         ListIterator<ToDo> itToDos = listaToDos.listIterator();
 
         while(itToDos.hasNext()){
             ToDo todo = itToDos.next();
+            System.out.println("\n--- ToDo: " + todo.getNameToDo() + " ---");
 
-            System.out.println("\n--- Lista: " + todo.getNameToDo() + " ---");
-
-            boolean hayEnEsteLista = false;
+            boolean hayEnEsteLista = false; //Variable bandera, para este To-Do especifico
 
             // Obtener tareas y recorrer con iterator
             LinkedList<Tarea> tareas = todo.getTareas();
@@ -408,24 +360,20 @@ public class App {
 
             while(itTareas.hasNext()){
                 Tarea tarea = itTareas.next();
-
                 // Buscar si contiene el texto
                 if(tarea.getDesc().toLowerCase().contains(textoBuscado)){
-                    System.out.println("  - " + tarea.getDesc());
-                    System.out.println("    Prioridad: " + tarea.getPrioridad() +
-                            " | Status: " + tarea.getStatus() +
-                            " | Fecha: " + tarea.getFecha());
+                    System.out.println(tarea);
                     hayEnEsteLista = true;
                     encontro = true;
                 }
             }
 
-            if(!hayEnEsteLista){
-                System.out.println("  No se encontraron coincidencias en esta lista.");
+            if(hayEnEsteLista==false){
+                System.out.println("  No se encontraron coincidencias en este ToDo.");
             }
-        }
+        } //Saliendo del While que recorre los To-Do
 
-        if(!encontro){
+        if(encontro==false){
             System.out.println("\nNo se encontraron tareas que contengan '" + textoBuscado + "'");
         }
 
@@ -448,25 +396,28 @@ public class App {
         System.out.print("Ingrese el nombre del ToDo a eliminar: ");
         String nombreToDo = sc.nextLine();
 
-        // Buscar y eliminar con iterator
+        ToDo toDoselect = buscarToDoNombre(nombreToDo);
+
+        if(toDoselect == null){
+            System.out.println("No existe un ToDo con ese nombre");
+            System.out.println("Porfavor ingrese un nombre de ToDo valido para eliminar\n");
+            return; //Sale del metodo
+        }
+
+        // Eliminar to-Do con iterator
         ListIterator<ToDo> it = listaToDos.listIterator();
-        boolean encontrado = false;
 
         while (it.hasNext()) {
             ToDo todo = it.next();
 
             if (todo.getNameToDo().equalsIgnoreCase(nombreToDo)) {
-
                 it.remove(); // Eliminar con iterator
                 System.out.println("ToDo- '" + nombreToDo + "' eliminado exitosamente.");
 
-                encontrado = true;
                 break;  //Si lo encuentra hace un break
             }
         }
-            if (!encontrado) {
-                System.out.println("No existe un ToDo con ese nombre.");
-        }
+
     }
 
 
@@ -500,7 +451,9 @@ public class App {
     public void ejecutar(){
         int opcion;
 
-        do {
+        //Estructura do - while
+
+        do {   //SIEMPRE VA A HACER ESTO
             mostrarMenu();
             opcion = sc.nextInt();
             sc.nextLine(); // Limpiar buffer
@@ -540,8 +493,12 @@ public class App {
                     System.out.println("\n Opción inválida. Intente nuevamente.");
             }
 
-        } while(opcion != 0);
+        } while(opcion != 0);   //Volver a repetir el bucle si no se marca 0
 
         sc.close();
     }
+
+
+
+
 }
