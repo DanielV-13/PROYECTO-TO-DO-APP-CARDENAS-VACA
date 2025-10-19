@@ -1,0 +1,4 @@
+//MAIN PARA PROBAR COMPARATOOOOR
+
+public class Main3 {
+}
