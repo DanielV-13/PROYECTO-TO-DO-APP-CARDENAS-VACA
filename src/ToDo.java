@@ -77,97 +77,76 @@ public class ToDo {
     }
 
 
- /*   //3) Generar una vista de las Tareas pendientes
-    public void verPendientes(){
-        String s="------Tareas Pendientes-----\n";  //Variable local para almacenar tareas pendientes
-
-        boolean hayPendientes=false; //Variable local para verificar si hayPendientes
-
-        //Caso1- La lista esta vacia
-        if(lista.isEmpty()){
-            System.out.println("No hay tareas en la Lista");
-            return ; //No hacer nada y salir del metodo
-
-        // Caso 2 - La lista no esta vacia
-        }else{
-            //Creo el iterator
-            ListIterator<Tarea> it = lista.listIterator();
-
-            while(it.hasNext()){
-                Tarea t= it.next(); //La tarea en cuestion
-                if(t.getStatus().equals("Pendiente")){
-                    s= s+"-"+t.getDesc()+"\n FechaMaxima: "+t.getFecha()+
-                            "\n Prioridad: "+t.getPrioridad()+
-                            "\n----------------------------\n";
-
-                    hayPendientes=true; //Cambia el estado de hayPendientes
-                }
-            }
-            if (hayPendientes==false){
-                //Esto es distinto de que la lista este vacia
-                System.out.println("No hay tareas pendientes");
-            }else{
-                System.out.println(s);
-            }
-        }
-    }
-
-
-  */
-
     //--------------USAR COMPARATOR EJEMPLO EN CLASE-------------
     //3) Generar una vista de las Tareas pendientes
     public LinkedList<Tarea> verPendientes(){
         System.out.println("------Tareas Pendientes-----\n");  //Variable local para almacenar tareas pendientes
 
-            //Creo el iterator
+        //Creo la lista que va a devolver el metodo
             LinkedList<Tarea> pendientes;
+            //RECORDAR: "lista" es el atributo de la clase ToDo que guarda la lista de Tareas
             ListaAvanzada<Tarea> listaAvanzada = new ListaAvanzada<>(lista);  //Una lista avanzada, que encapsula la lista de Tareas
 
-            pendientes= listaAvanzada.buscar(new ComparatorPrioridad(), new Tarea (null,LocalDate.of(2025,10,6),null));
+            //Tarea PLANTILLA
+            Tarea plantilla= new Tarea(null,null,null);
+            //Por defecto, el status ya es "Pendiente"
+
+            pendientes= listaAvanzada.buscar(new ComparatorStatus(), plantilla);
             return pendientes;
 
     }
 
+    //4) Generar una vista de las Tareas Completadas
+    public LinkedList<Tarea> verCompletadas(){
+        System.out.println("------Tareas Completadas-----\n");  //Variable local para almacenar tareas pendientes
 
+        //Creo la lista que va a devolver el metodo
+        LinkedList<Tarea> completadas;
+        //RECORDAR: "lista" es el atributo de la clase ToDo que guarda la lista de Tareas
+        ListaAvanzada<Tarea> listaAvanzada = new ListaAvanzada<>(lista);  //Una lista avanzada, que encapsula la lista de Tareas
 
+        //Tarea PLANTILLA
+        Tarea plantilla= new Tarea(null,null,null);
+        plantilla.setStatus("Completado");
 
+        completadas= listaAvanzada.buscar(new ComparatorStatus(), plantilla);
+        return completadas;
 
+    }
 
+    //5) Generar una vista de las Tareas de una Prioridad dada
+    public LinkedList<Tarea> verPrioridad(String prioridadBuscada){
 
+        //Creo la lista que va a devolver el metodo
+        LinkedList<Tarea> resultado;
+        //RECORDAR: "lista" es el atributo de la clase ToDo que guarda la lista de Tareas
+        ListaAvanzada<Tarea> listaAvanzada = new ListaAvanzada<>(lista);  //Una lista avanzada, que encapsula la lista de Tareas
 
+        //Tarea PLANTILLA
+        Tarea plantilla= new Tarea(null,null,null);
+        plantilla.setPrioridad(prioridadBuscada);
 
+        resultado= listaAvanzada.buscar(new ComparatorPrioridad(), plantilla);
+        return resultado;
 
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // 4) Eliminar Tareas ya realizadas - CON ITERATOR
     public void eliminarCompletadas(){
-        // Crear el iterator
-        ListIterator<Tarea> it = lista.listIterator();
+        //Creo la lista con las tareas completadas del To-Do
+        LinkedList<Tarea> completadas = this.verCompletadas();
 
-        // Recorrer la lista con el iterator
-        while(it.hasNext()){
-            Tarea t = it.next(); // La tarea en cuestion
+        // Crear el iterator para recorrer el To-Do original
+        ListIterator<Tarea> original = lista.listIterator();
 
-            // Si la tarea está completada
-            if(t.getStatus().equals("Completado")){
-                it.remove(); // Eliminar usando el metodo remove del iterador
+        // Recorrer la lista de tareas con el iterator
+        while(original.hasNext()){
+            Tarea t = original.next(); // La tarea en cuestion
+
+            for(Tarea completada: completadas) {
+                if(t == completada){
+                    original.remove();
+                    break; // Agregar break para salir del for después de eliminar
+                }
             }
         }
     }

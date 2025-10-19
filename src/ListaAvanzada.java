@@ -21,7 +21,7 @@ public class ListaAvanzada <E> {
     //Atributos
     LinkedList<E> L;
 
-    //Constructor
+    //Constructor-- se le ingresa una LINKED LIST
     public ListaAvanzada(LinkedList<E> L) {
         this.L = L;
     }
@@ -29,14 +29,17 @@ public class ListaAvanzada <E> {
     //Metodo para BUSCAR
     //Devuelve una LinkedList
     //Parametros: UN COMPARATOR <E> y un dato de tipo E
+    //El dato tipo E es una PLANTILLA
+
+    //El proposito de este metodo es mostrar las tareas que COINCIDAN con algun valor del objeto plantilla
     public LinkedList<E> buscar(Comparator<E> c, E valor) {
         LinkedList<E> resultado = new LinkedList<>();
         for (E elemento : L) {
-            if (c.compare(elemento, valor) == 0) {
+            if (c.compare(elemento, valor) == 0) {   // Si retorna 0 = COINCIDEN
                 resultado.add(elemento);
             }
         }
-        return resultado;
+        return resultado; //Retorna solo los valores que coincidieron con la plantilla
     }
 }
 
