@@ -10,11 +10,13 @@ public class App {
 
     private LinkedList<ToDo> listaToDos; //Linked List que guarda ToDos
     private Scanner sc; //Objeto de tipo Scanner
+    private Historial historial;
 
     //--------Constructor-----------
     public App(){
         listaToDos= new LinkedList<>();  //Creamos la nueva linkedList de To-Dos
         sc = new Scanner(System.in); //Iniciamos el Scanner
+        historial = new Historial();
         System.out.println("-------APLICACION INICIADA-------");
         //CARGAR DATOS desde ARCHIVO AL INICIAR
         cargarDatos();
@@ -64,6 +66,8 @@ public class App {
         listaToDos.add(nuevoToDo); //Agregar al final de la lista
 
         System.out.println("-ToDo " + nombre + " creado exitosamente");
+
+        historial.guardarEstado(listaToDos);
 
     }
 
@@ -150,6 +154,8 @@ public class App {
             toDoselect.addTarea(nuevaTarea);
 
             System.out.println("Tarea- " + desc + " -agregada exitosamente a- " + nombreToDo + "");
+
+            historial.guardarEstado(listaToDos);
         }
 
 
@@ -329,6 +335,7 @@ public class App {
                 t.completarTarea();  // COMPLETAR la tarea
                 System.out.println("Tarea '" + t.getDesc() + "' completada exitosamente.");
                 encontrada = true;
+                historial.guardarEstado(listaToDos);
                 break;  // Salir después de completar
             }
         }
@@ -416,6 +423,7 @@ public class App {
             if (todo.getNameToDo().equalsIgnoreCase(nombreToDo)) {
                 it.remove(); // Eliminar con iterator
                 System.out.println("ToDo- '" + nombreToDo + "' eliminado exitosamente.");
+                historial.guardarEstado(listaToDos);
 
                 break;  //Si lo encuentra hace un break
             }
@@ -445,7 +453,9 @@ public class App {
         System.out.println("    9. Buscar tareas por texto");
         System.out.println("");
         System.out.println("  SISTEMA:");
-        System.out.println("   10. Guardar datos manualmente");  // Metodo para Guardar en Archivos
+        System.out.println("   10. Deshacer ultima accion");
+        System.out.println("   11. Limpiar historial de cambios");
+        System.out.println("   12. Guardar datos manualmente");  // Metodo para Guardar en Archivos
         System.out.println("");
         System.out.println("    0. Salir");
         System.out.println("---------------------------------------------");
@@ -493,6 +503,15 @@ public class App {
                     buscarTareasPorTexto();
                     break;
                 case 10:
+                    LinkedList<ToDo> estadoAnterior = historial.deshacer();
+                    if (estadoAnterior != null) {
+                        listaToDos = estadoAnterior;
+                    }
+                    break;
+                case 11:
+                    historial.limpiarHistorial();
+                    break;
+                case 12:
                     guardarDatos();
                     break;
                 case 0:
