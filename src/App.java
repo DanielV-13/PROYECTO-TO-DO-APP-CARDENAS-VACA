@@ -11,12 +11,14 @@ public class App {
     private LinkedList<ToDo> listaToDos; //Linked List que guarda ToDos
     private Scanner sc; //Objeto de tipo Scanner
     private Historial historial;
+    private HistorialCompletadas historialCompletadas;
 
     //--------Constructor-----------
     public App(){
         listaToDos= new LinkedList<>();  //Creamos la nueva linkedList de To-Dos
         sc = new Scanner(System.in); //Iniciamos el Scanner
         historial = new Historial();
+        historialCompletadas = new HistorialCompletadas();
         System.out.println("-------APLICACION INICIADA-------");
         //CARGAR DATOS desde ARCHIVO AL INICIAR
         cargarDatos();
@@ -336,6 +338,7 @@ public class App {
                 System.out.println("Tarea '" + t.getDesc() + "' completada exitosamente.");
                 encontrada = true;
                 historial.guardarEstado(listaToDos);
+                historialCompletadas.agregarCompletada(t);
                 break;  // Salir después de completar
             }
         }
