@@ -1,6 +1,6 @@
 import java.util.Comparator;
 
-//COMPARATOR POR PRIORIDAD
+//COMPARATOR POR PRIORIDAD, solo verifica la igualdad
 // En este caso no importa si se retorna -1 o 1 para ordenar,
 // porque NO estamos ordenando, solo queremos buscar COINCIDENCIA con una plantilla.
 // Solo importa el 0 para indicar coincidencia.
