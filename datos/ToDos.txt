@@ -1,6 +1,4 @@
-TO-DO|PruebasHistorial|2025-10-26
-TAREA|TareaA|Alta|2025-10-28|Completado|2025-10-26
-TAREA|TareaB|Media|2025-10-28|Completado|2025-10-21
-TAREA|TareaC|Baja|2025-10-28|Completado|2025-10-16
-TAREA|TareaD|Alta|2025-10-28|Completado|2025-10-06
+TO-DO|uees|2025-10-25
+---
+TO-DO|deporte|2025-10-25
 ---

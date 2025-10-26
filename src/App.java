@@ -500,6 +500,147 @@ public class App {
     }
 
 
+//------FUNCIONALIDAD EXTRA--------
+    // Editar detalles de una tarea PENDIENTE (Selección por Número)
+
+    public void editarTareaPendiente() {
+        // --- 1. Seleccionar el ToD0 ---
+        if (listaToDos.isEmpty()) {
+            System.out.println("\nNo hay listas de ToDo disponibles.");
+            return;
+        }
+        verToDos();
+        System.out.print("Ingrese el nombre del ToDo donde está la tarea a editar: ");
+        String nombreToDo = sc.nextLine();
+        ToDo toDoSeleccionado = buscarToDoNombre(nombreToDo);
+
+        if (toDoSeleccionado == null) {
+            System.out.println("No existe un ToDo con ese nombre.");
+            return;
+        }
+
+        // --- 2. Obtener y mostrar TAREAS PENDIENTES numeradas ---
+        LinkedList<Tarea> pendientes = toDoSeleccionado.verPendientes(); // Ya vienen ordenadas
+
+        if (pendientes.isEmpty()) {
+            System.out.println("\nNo hay tareas pendientes en este ToDo para editar.");
+            return;
+        }
+
+        // Mostramos las tareas pendientes numeradas
+        System.out.println("\n--- TAREAS PENDIENTES en '" + toDoSeleccionado.getNameToDo() + "' ---");
+        int contador = 1;
+        for (Tarea t : pendientes) {
+            System.out.println("----- Tarea #" + contador + " -----"); // Número de tarea
+            System.out.println(t); // Muestra la tarea
+            contador++;
+        }
+
+        // --- 3. Seleccionar la tarea por NÚMERO ---
+        int numeroTareaAEditar = -1; // Inicia con -1, que es un valor invalido
+        Tarea tareaAEditar = null;   // Variable para guardar la tarea seleccionada
+
+        // Bucle para validar la entrada del número
+        boolean numeroValido = false;
+        while (!numeroValido) {  //Mientras sea False la variable booleana
+            System.out.print("\nIngrese el NÚMERO de la tarea PENDIENTE que desea editar (1-" + pendientes.size() + "): ");
+
+            try {
+                numeroTareaAEditar = sc.nextInt();
+                sc.nextLine(); // Limpiar buffer
+
+                // Validar que el número esté en el rango correcto
+                if (numeroTareaAEditar >= 1 && numeroTareaAEditar <= pendientes.size()) {
+                    // Obtener la tarea correcta de la lista (índice es = numero - 1)
+                    tareaAEditar = pendientes.get(numeroTareaAEditar - 1);
+                    numeroValido = true; // Salir del bucle
+
+                } else {
+                    System.out.println("Número fuera de rango. Intente de nuevo.");
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Entrada inválida. Debe ingresar un número.");
+                sc.nextLine(); // Limpiar buffer
+
+            }
+        } // Fin del while que valida la seleccion de la Tarea por numero
+
+        // --- 4) Si se seleccionó una tarea válida, pedir qué editar ---
+        if (tareaAEditar != null) {
+            System.out.println("\nEditando Tarea #" + numeroTareaAEditar + ": \n" + tareaAEditar);
+            System.out.println("¿Qué detalle desea editar?");
+            System.out.println("  1. Descripción");
+            System.out.println("  2. Fecha Máxima");
+            System.out.println("  3. Prioridad");
+            System.out.println("  0. Cancelar");
+            System.out.print("Ingrese opción: ");
+
+            int opcionEditar;
+            try {
+                opcionEditar = sc.nextInt();
+                sc.nextLine(); // Limpiar buffer
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Debe ingresar un número.");
+                sc.nextLine(); // Limpiar buffer
+                return;
+            }
+
+            boolean cambioRealizado = false;  //Variable Bandera
+
+            switch (opcionEditar) {
+                case 1: // Editar Descripción
+                    System.out.print("Ingrese la nueva descripción: ");
+                    String nuevaDesc = sc.nextLine();
+                    tareaAEditar.setDesc(nuevaDesc);
+                    System.out.println("Descripción actualizada.");
+                    cambioRealizado = true;
+                    break;
+
+                case 2: // Editar Fecha Máxima
+                    System.out.println("Ingrese la NUEVA FECHA MAXIMA:");
+                    System.out.print("Ingrese el año (ej: 2025): ");
+                    int año = sc.nextInt();
+                    System.out.print("Ingrese el mes (1-12): ");
+                    int mes = sc.nextInt();
+                    System.out.print("Ingrese el día (1-31): ");
+                    int dia = sc.nextInt();
+                    sc.nextLine(); // Limpiar buffer
+
+                    try {
+                        LocalDate nuevaFecha = LocalDate.of(año, mes, dia);
+                        tareaAEditar.setFecha(nuevaFecha);
+                        System.out.println("Fecha máxima actualizada.");
+                        cambioRealizado = true;
+
+                    } catch (java.time.DateTimeException e) {
+                        System.out.println("Fecha inválida. No se realizaron cambios.");
+                    }
+                    break;
+
+                case 3: // Editar Prioridad
+                    System.out.println("Seleccione la NUEVA PRIORIDAD:");
+                    String nuevaPrioridad = seleccionarPrioridad();
+                    tareaAEditar.setPrioridad(nuevaPrioridad);
+                    System.out.println("Prioridad actualizada.");
+                    cambioRealizado = true;
+                    break;
+
+                case 0: // Cancelar
+                    System.out.println("Edición cancelada.");
+                    break;
+
+                default:
+                    System.out.println("Opción inválida. No se realizaron cambios.");
+                    break;
+            }
+
+            // --- 5. Guardar estado si hubo cambios ---
+            if (cambioRealizado) {
+                historial.guardarEstado(listaToDos);
+            }
+        }
+    }
+
 
 
 
