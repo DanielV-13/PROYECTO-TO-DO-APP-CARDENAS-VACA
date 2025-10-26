@@ -528,12 +528,13 @@ public class App {
         System.out.println("  BÚSQUEDA Y FILTROS:");
         System.out.println("    7. Ver tareas por prioridad (TODOS)");
         System.out.println("    8. Ver todas las completadas (TODOS)");
-        System.out.println("    9. Buscar tareas por texto");
+        System.out.println("    9. Ver hace cuanto se completaron las tareas (TODOS)");
+        System.out.println("    10. Buscar tareas por texto");
         System.out.println("");
         System.out.println("  SISTEMA:");
-        System.out.println("   10. Deshacer ultima accion");
-        System.out.println("   11. Limpiar historial de cambios");
-        System.out.println("   12. Guardar datos manualmente");  // Metodo para Guardar en Archivos
+        System.out.println("   11. Deshacer ultima accion");
+        System.out.println("   12. Limpiar historial de cambios");
+        System.out.println("   13. Guardar datos manualmente");  // Metodo para Guardar en Archivos
         System.out.println("");
         System.out.println("    0. Salir");
         System.out.println("---------------------------------------------");
@@ -578,18 +579,21 @@ public class App {
                     verTodasLasCompletadas();
                     break;
                 case 9:
-                    buscarTareasPorTexto();
+                    System.out.println(historialCompletadas);
                     break;
                 case 10:
+                    buscarTareasPorTexto();
+                    break;
+                case 11:
                     LinkedList<ToDo> estadoAnterior = historial.deshacer();
                     if (estadoAnterior != null) {
                         listaToDos = estadoAnterior;
                     }
                     break;
-                case 11:
+                case 12:
                     historial.limpiarHistorial();
                     break;
-                case 12:
+                case 13:
                     guardarDatos();
                     break;
                 case 0:

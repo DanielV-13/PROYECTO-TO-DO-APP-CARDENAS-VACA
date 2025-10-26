@@ -31,4 +31,34 @@ public class HistorialCompletadas {
             mes.remove(t);
         }
     }
+
+    @Override
+    public String toString() {
+        String texto = "===== HISTORIAL DE TAREAS COMPLETADAS =====\n";
+        texto += "\n-- Última semana --\n";
+        if (semana.isEmpty()) {
+            texto += "No hay tareas completadas en la última semana.\n";
+        } else {
+            for (Tarea t : semana) {
+                texto += t + "\n";
+            }
+        }
+        texto += "\n-- Últimos 15 días --\n";
+        if (dias.isEmpty()) {
+            texto += "No hay tareas completadas en los últimos 15 días.\n";
+        } else {
+            for (Tarea t : dias) {
+                texto += t + "\n";
+            }
+        }
+        texto += "\n-- Último mes --\n";
+        if (mes.isEmpty()) {
+            texto += "No hay tareas completadas en el último mes.\n";
+        } else {
+            for (Tarea t : mes) {
+                texto += t + "\n";
+            }
+        }
+        return texto;
+    }
 }
