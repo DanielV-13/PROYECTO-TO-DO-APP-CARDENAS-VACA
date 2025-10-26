@@ -928,24 +928,25 @@ public class App {
         System.out.println("    1. Crear nuevo ToDo");
         System.out.println("    2. Ver todos los ToDos");
         System.out.println("    3. Ver tareas de un ToDo");
-        System.out.println("    4. Eliminar un ToDo");
+        System.out.println("    4. Editar nombre de ToDo");
+        System.out.println("    5. Eliminar un ToDo");
         System.out.println("");
         System.out.println("  GESTIÓN DE TAREAS:");
-        System.out.println("    5. Crear nueva tarea");
-        System.out.println("    6. Completar tarea específica");
-        System.out.println("    7. Regresar tarea completada a Pendiente");
-        System.out.println("    8. Editar tarea pendiente");
-        System.out.println("    9. Remover tarea específica");
+        System.out.println("    6. Crear nueva tarea");
+        System.out.println("    7. Completar tarea específica");
+        System.out.println("    8. Regresar tarea completada a Pendiente");
+        System.out.println("    9. Editar tarea pendiente");
+        System.out.println("   10. Remover tarea específica");
         System.out.println("");
         System.out.println("  BÚSQUEDA Y FILTROS:");
-        System.out.println("   10. Ver tareas por prioridad (TODOS)");
-        System.out.println("   11. Ver Histórico de tareas completadas");
-        System.out.println("   12. Buscar tareas por texto");
+        System.out.println("   11. Ver tareas por prioridad (TODOS)");
+        System.out.println("   12. Ver Histórico de tareas completadas");
+        System.out.println("   13. Buscar tareas por texto");
         System.out.println("");
         System.out.println("  SISTEMA:");
-        System.out.println("   13. Deshacer ultima accion");
-        System.out.println("   14. Limpiar historial de cambios");
-        System.out.println("   15. Guardar datos manualmente");
+        System.out.println("   14. Deshacer ultima accion");
+        System.out.println("   15. Limpiar historial de cambios");
+        System.out.println("   16. Guardar datos manualmente");
         System.out.println("");
         System.out.println("    0. Salir");
         System.out.println("---------------------------------------------");
@@ -959,11 +960,18 @@ public class App {
 
         //Estructura do - while
 
-        do {   //SIEMPRE VA A HACER ESTO
-            mostrarMenu();
-            opcion = sc.nextInt();
-            sc.nextLine(); // Limpiar buffer
+        do {
+            mostrarMenu(); //Siempre se va a hacer esto al menos 1 vez
 
+            // Manejar ingreso de opcion con try-catch
+            try {
+                opcion = sc.nextInt();
+                sc.nextLine(); // Limpiar buffer
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("\nEntrada inválida. Debe ingresar un número");
+                sc.nextLine(); // Limpiar buffer de entrada incorrecta
+                opcion = -1; // Asignar un valor inválido
+            }
             switch(opcion){
                 case 1:
                     crearNuevoToDo();
@@ -975,56 +983,41 @@ public class App {
                     verTareasDeToDo();
                     break;
                 case 4:
-                    eliminarToDo();
+                    editarNombreToDo();
                     break;
-                case 5:
-                    crearTarea();
-                    break;
-                case 6:
-                    completarTareaEspecifica();
-                    break;
-                case 7:
-                    regresarTareaAPendiente();
-                    break;
-                case 8:
-                    editarTareaPendiente();
-                    break;
-                case 9:
-                    removerTarea();
-                    break;
-                case 10:
-                    verTareasPorPrioridad();
-                    break;
-                case 11:
-                    System.out.println(historialCompletadas);
-                    break;
-                case 12:
-                    buscarTareasPorTexto();
-                    break;
-                case 13:
+                // --- FIN NUEVO CASE ---
+                case 5: eliminarToDo(); break;
+                case 6: crearTarea(); break;
+                case 7: completarTareaEspecifica(); break;
+                case 8: regresarTareaAPendiente(); break;
+                case 9: editarTareaPendiente(); break;
+                case 10: removerTarea(); break;
+                case 11: verTareasPorPrioridad(); break;
+                case 12: System.out.println(historialCompletadas); break;
+                case 13: buscarTareasPorTexto(); break;
+                case 14:
                     LinkedList<ToDo> estadoAnterior = historial.deshacer();
-                    if (estadoAnterior != null) { listaToDos = estadoAnterior;
-                        resincronizarHistorialCompletadas(); //Actualiza el Historial de Completadas luego de un Deshacer
+                    if (estadoAnterior != null) {
+                        listaToDos = estadoAnterior;
+                        resincronizarHistorialCompletadas();
                     }
                     break;
-                case 14:
-                    historial.limpiarHistorial();
-                    break;
-                case 15:
-                    guardarDatos();
-                    break;
-                // --- CASE OCULTO (numero de acceso 100) ---
-                case 100:
-                    completarTareaConFechaManual();
-                    break;
+                case 15: historial.limpiarHistorial(); break;
+                case 16: guardarDatos(); break;
+                // --- CASE OCULTO (Codigo de acceso 100) ---
+                case 100: completarTareaConFechaManual(); break;
 
                 case 0:
                     System.out.println("\n Guardando datos en archivo...");
                     guardarDatos();
                     System.out.println("CERRANDO APLICACION..........");
                     break;
+
+
+                case -1: break; // No hacer nada si hubo error de entrada
+
                 default:
-                    System.out.println("\n Opción inválida. Intente nuevamente.");
+                    System.out.println("\n Opción inválida. Intente nuevamente");
             }
 
         } while(opcion != 0);   //Volver a repetir el bucle si no se marca 0
