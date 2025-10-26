@@ -746,19 +746,19 @@ public class App {
         System.out.println("    5. Crear nueva tarea");
         System.out.println("    6. Completar tarea específica");
         System.out.println("    7. Regresar tarea completada a Pendiente");
+        System.out.println("    8. Editar tarea pendiente");
         System.out.println("");
         System.out.println("  BÚSQUEDA Y FILTROS:");
-        System.out.println("    8. Ver tareas por prioridad (TODOS)");
-        System.out.println("    9. Ver Histórico de tareas completadas");
-        System.out.println("   10. Buscar tareas por texto");
+        System.out.println("    9. Ver tareas por prioridad (TODOS)");
+        System.out.println("   10. Ver Histórico de tareas completadas");
+        System.out.println("   11. Buscar tareas por texto");
         System.out.println("");
         System.out.println("  SISTEMA:");
-        System.out.println("   11. Deshacer ultima accion");
-        System.out.println("   12. Limpiar historial de cambios");
-        System.out.println("   13. Guardar datos manualmente");
+        System.out.println("   12. Deshacer ultima accion");
+        System.out.println("   13. Limpiar historial de cambios");
+        System.out.println("   14. Guardar datos manualmente");
         System.out.println("");
-        System.out.println("    0. Salir");
-        System.out.println("---------------------------------------------");
+        System.out.println("    0. Salir");System.out.println("---------------------------------------------");
         System.out.print("Seleccione una opción: ");
     }
 
@@ -796,31 +796,33 @@ public class App {
                 case 7:
                     regresarTareaAPendiente();
                     break;
-
                 case 8:
+                    editarTareaPendiente();
+                    break;
+               case 9:
                     verTareasPorPrioridad();
                     break;
-                case 9:
+                case 10:
                     System.out.println(historialCompletadas);
                     break;
-                case 10:
+                case 11:
                     buscarTareasPorTexto();
                     break;
-                case 11:
+                case 12:
                     LinkedList<ToDo> estadoAnterior = historial.deshacer();
                     if (estadoAnterior != null) { listaToDos = estadoAnterior; }
                     break;
-                case 12:
+                case 13:
                     historial.limpiarHistorial();
                     break;
-                case 13:
+                case 14:
                     guardarDatos();
                     break;
-                // --- CASE OCULTO (solo para Pruebas) ---
+                // --- CASE OCULTO ---
                 case 100:
                     completarTareaConFechaManual();
                     break;
-                // ----------------------------------------------------
+                // ------------------------------------------
                 case 0:
                     System.out.println("\n Guardando datos en archivo...");
                     guardarDatos();
