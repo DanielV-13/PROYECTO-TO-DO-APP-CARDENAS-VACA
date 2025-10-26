@@ -98,6 +98,27 @@ public class App {
     }
 
 
+    //*** 3) Reconstruye el historial de completadas desde cero basado en el estado actual de listaToDos.
+    //Debe llamarse después de una operación de "Deshacer"
+
+    private void resincronizarHistorialCompletadas() {
+        // 1) Limpiamos el historial actual creando uno nuevo
+        this.historialCompletadas = new HistorialCompletadas();
+
+        // 2) Recorremos el estado actual de listaToDos (que fue restaurado por deshacer)
+        ListIterator<ToDo> itToDos = listaToDos.listIterator();
+        while (itToDos.hasNext()) {
+            ToDo todo = itToDos.next();
+            LinkedList<Tarea> tareas = todo.getTareas(); //getTareas accede a la LinkedList de Tareas de cada TO-D0
+            for (Tarea tarea : tareas) {
+                // 3. Si una tarea está completada, la añadimos al nuevo historial
+                if (tarea.getStatus().equals("Completado") && tarea.getFechaCompletada() != null) {
+                    this.historialCompletadas.agregarCompletada(tarea);
+                }
+            }
+        }
+    }
+
 
     //------------METODOS PRINCIPALES---------
     //*** 1) Crear un Nuevo ToD0
@@ -926,7 +947,9 @@ public class App {
                     break;
                 case 13:
                     LinkedList<ToDo> estadoAnterior = historial.deshacer();
-                    if (estadoAnterior != null) { listaToDos = estadoAnterior; }
+                    if (estadoAnterior != null) { listaToDos = estadoAnterior;
+                        resincronizarHistorialCompletadas(); //Actualiza el Historial de Completadas luego de un Deshacer
+                    }
                     break;
                 case 14:
                     historial.limpiarHistorial();
