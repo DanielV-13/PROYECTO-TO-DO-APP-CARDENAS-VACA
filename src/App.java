@@ -862,6 +862,62 @@ public class App {
 
     }
 
+    //------FUNCIONALIDAD EXTRA--------
+    //Editar detalles de una lista de tarea (de un ToDo)
+    // En este caso seria editar el nombre de una lista de ToD0
+
+    public void editarNombreToDo() {
+        // --- 1. Verificar y mostrar ToDos existentes ---
+        if (listaToDos.isEmpty()) {
+            System.out.println("\nNo hay listas de ToDo para editar.");
+            return;
+        }
+        System.out.println("\n--- Editar Nombre de ToDo ---");
+        verToDos(); // Muestra los ToDos actuales
+
+        // --- 2. Seleccionar el ToD0 a editar ---
+        System.out.print("Ingrese el nombre del ToDo que desea editar: ");
+        String nombreActual = sc.nextLine();
+        ToDo toDoAEditar = buscarToDoNombre(nombreActual);
+
+        if (toDoAEditar == null) {
+            System.out.println("No se encontró un ToDo con el nombre '" + nombreActual);
+            return;
+        }
+
+        // --- 3. Pedir el nuevo nombre ---
+        System.out.print("Ingrese el NUEVO nombre para el ToDo'" + nombreActual + "': ");
+        String nuevoNombre = sc.nextLine();
+
+        // --- 4. Validar que el nuevo nombre no esté vacío y no exista ya ---
+        if (nuevoNombre.trim().isEmpty()) {
+            System.out.println("El nuevo nombre no puede estar vacío. No se realizaron cambios");
+            return;
+        }
+        // Usamos buscarToDoNombre para ver si ya existe otro ToD0 con ese nombre
+        // Nos aseguramos de que no sea el mismo ToD0 que estamos editando
+        ToDo toDoExistenteConNuevoNombre = buscarToDoNombre(nuevoNombre);
+        if (toDoExistenteConNuevoNombre != null && toDoExistenteConNuevoNombre != toDoAEditar) {
+            System.out.println("Ya existe otro ToDo con el nombre " + nuevoNombre + "No puede haber 2 ToDo con el mismo nombre");
+            return;
+        }
+
+        // --- 5. Realizar el cambio y guardar estado ---
+        String nombreAntiguo = toDoAEditar.getNameToDo(); // Guardamos el nombre antiguo para el mensaje
+        toDoAEditar.setNameToDo(nuevoNombre); // Usamos el setter de ToD0
+        System.out.println("\n La lista ToDo '" + nombreAntiguo + "' ha sido renombrada a '" + nuevoNombre);
+
+        // Guardar el estado para el "Deshacer"
+        historial.guardarEstado(listaToDos);
+    }
+
+
+
+
+
+
+
+
 
     //*** 10) Mostrar menú principal
     public void mostrarMenu(){
