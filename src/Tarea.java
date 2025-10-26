@@ -35,6 +35,7 @@ public class Tarea {
     public void setStatus(String status){this.status=status;}
 
     public LocalDate getFechaCompletada(){return fechaCompletada;    }
+    public void setFechaCompletada(LocalDate fechaCompletada) {this.fechaCompletada = fechaCompletada;}
 
 //METODO to String de tarea
     @Override
