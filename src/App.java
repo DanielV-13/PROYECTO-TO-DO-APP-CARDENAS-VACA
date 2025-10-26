@@ -636,11 +636,22 @@ public class App {
                 LinkedList<Tarea> tareas = todo.getTareas();
 
                 for(Tarea t : tareas){
+                    //Comprobar que la fechadeCompletacion no sea NULL
+                    String fechaCompletacionStr;
+
+                    if (t.getFechaCompletada() == null) {
+                        fechaCompletacionStr = "-";
+                    } else {
+                        fechaCompletacionStr = t.getFechaCompletada().toString();
+                    }
+
                     bw.write("TAREA|" +
                             t.getDesc() + "|" +
                             t.getPrioridad() + "|" +
                             t.getFecha() + "|" +
-                            t.getStatus());
+                            t.getStatus() + "|" +  // Nuevo delimitador
+                            fechaCompletacionStr);
+
                     bw.newLine(); //Salto de Linea
                 }
 
@@ -703,7 +714,7 @@ public class App {
                     String nombre = partes[1];
                     // Crear nuevo To-Do
                     todoActual = new ToDo(nombre);
-                    listaToDos.add(todoActual);
+                    listaToDos.add(todoActual); //Añade el nuevo ToD0 a la lista de la App
 
 
                 // SI ES UNA TAREA
@@ -719,9 +730,25 @@ public class App {
                     LocalDate fecha = LocalDate.parse(partes[3]); //Convertir String en LocalDate
                     String status = partes[4];
 
+                    // --- Comprobamos la fecha de Completacion del archivo---
+                    // Comprobamos si el archivo ya tiene el campo extra (partes.length > 5)
+                    String fechaCompStr;
+                    if (partes.length > 5) {
+                        fechaCompStr = partes[5]; // Si existe, lo leemos
+                    } else {
+                        fechaCompStr = "-"; // Si no tiene el campo fechaCompletada, es null
+                    }
+
+
                     // Crear tarea
                     Tarea tarea = new Tarea(desc, fecha, prioridad);
                     tarea.setStatus(status);  // Restaurar el status de la Tarea (que no sea Pendiente por Defecto)
+
+                    // Restaurar la fecha de completación de la Tarea si no es "null"
+                    if (!fechaCompStr.equals("-")) {
+                        tarea.setFechaCompletada(LocalDate.parse(fechaCompStr)); //Pasamos de String a Date
+                    }
+
 
                     // Agregar al To-Do actual
                     todoActual.addTarea(tarea);
