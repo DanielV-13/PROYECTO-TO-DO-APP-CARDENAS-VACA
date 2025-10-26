@@ -647,6 +647,102 @@ public class App {
     }
 
 
+    //------FUNCIONALIDAD EXTRA--------
+    // Remover una tarea específica de una lista (sea pendiente o completada)
+
+    public void removerTarea() {
+        // --- 1. Seleccionar el ToD0 ---
+        if (listaToDos.isEmpty()) {
+            System.out.println("\nNo hay listas de ToDo disponibles.");
+            return;
+        }
+        verToDos();
+        System.out.print("Ingrese el nombre del ToDo de donde desea remover una tarea: ");
+        String nombreToDo = sc.nextLine();
+        ToDo toDoSeleccionado = buscarToDoNombre(nombreToDo);
+
+        if (toDoSeleccionado == null) {
+            System.out.println("No existe un ToDo con ese nombre.");
+            return;
+        }
+
+        // --- 2. Obtener y mostrar TODAS las tareas numeradas ---
+        LinkedList<Tarea> tareasDelToDo = toDoSeleccionado.getTareas(); // Obtenemos la lista interna
+
+        if (tareasDelToDo.isEmpty()) {
+            System.out.println("\nEste ToDo ('" + toDoSeleccionado.getNameToDo() + "') no tiene tareas para remover");
+            return;
+        }
+
+        System.out.println("\n--- TAREAS en '" + toDoSeleccionado.getNameToDo() + "' ---");
+        int contador = 1;
+        // Creamos una lista separada solo para mostrar, para no modificar la original aún
+        LinkedList<Tarea> tareasParaMostrar = new LinkedList<>(tareasDelToDo);
+        for (Tarea t : tareasParaMostrar) {
+            System.out.println("----- Tarea #" + contador + " -----");
+            System.out.println(t); // Muestra la tarea
+            contador++;
+        }
+
+        // --- 3. Seleccionar la tarea por NÚMERO ---
+        int numeroTareaARemover = -1; //Inicializamos con -1 que es un valor no valido
+        Tarea tareaARemover = null; //Variable para la tarea que se va a remover
+
+        boolean numeroValido = false;
+        while (!numeroValido) {  //Mientras se ingrese un numero invalido
+            System.out.print("\nIngrese el NÚMERO de la tarea que desea remover (1-" + tareasParaMostrar.size() + "): ");
+            try {
+                numeroTareaARemover = sc.nextInt();
+                sc.nextLine(); // Limpiar buffer
+
+                if (numeroTareaARemover >= 1 && numeroTareaARemover <= tareasParaMostrar.size()) {
+                    // Obtenemos la tarea correspondiente de la lista *para mostrar*
+                    //Solo idenficiamos la tarea que vamos a remover
+                    tareaARemover = tareasParaMostrar.get(numeroTareaARemover - 1); //numero - 1, nos da el indice de la tarea
+                    numeroValido = true;
+                } else {
+                    System.out.println("Número fuera de rango. Intente de nuevo");
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Entrada inválida Debe ingresar un número");
+                sc.nextLine();
+            }
+        }
+
+        // --- 4.Proceder a eliminar la tarea seleccionada ---
+        if (tareaARemover != null) {
+            boolean removidoExitosamente = false;
+
+            // Usamos un ListIterator sobre la lista ORIGINAL del ToD0 para eliminar de forma segura
+            ListIterator<Tarea> it = tareasDelToDo.listIterator();
+            while (it.hasNext()) {
+                Tarea tareaActual = it.next();
+                // Comparamos el objeto Tarea directamente
+                if (tareaActual == tareaARemover) {
+                    it.remove(); // Eliminamos la tarea usando el iterador
+                    removidoExitosamente = true;
+                    System.out.println("\nTarea '" + tareaARemover.getDesc() + "' removida de la lista");
+                    break; // Salimos del bucle una vez eliminada
+                }
+            }
+
+            // --- 5. Limpiar historiales y guardar estado si se eliminó ---
+            if (removidoExitosamente) {
+                // Si la tarea estaba completada, eliminarla también del historial de completadas
+                if (tareaARemover.getStatus().equals("Completado")) {
+                    historialCompletadas.eliminarCompletada(tareaARemover); // Llama al métod0
+                }
+                // Guardar el estado para el "Deshacer"
+                historial.guardarEstado(listaToDos); //
+            }
+        }
+    }
+
+
+
+
+
+
 
 
 
