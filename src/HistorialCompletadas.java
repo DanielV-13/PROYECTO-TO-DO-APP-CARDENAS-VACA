@@ -14,15 +14,27 @@ public class HistorialCompletadas {
     }
 
     public void agregarCompletada(Tarea t){
-        long diasDiferencia = ChronoUnit.DAYS.between(t.getFechaCompletada(), LocalDate.now());
-        if(diasDiferencia > 30){
-            mes.add(t);
-        } else if(diasDiferencia > 15){
-            dias.add(t);
-        } else if(diasDiferencia > 7){
-            semana.add(t);
+
+        // Asegurarse de que la fecha de Completacion no sea null
+        if (t.getFechaCompletada() == null) {
+            return; // No se puede procesar si no tiene fecha
         }
+
+        long diasDiferencia = ChronoUnit.DAYS.between(t.getFechaCompletada(), LocalDate.now());
+
+        // --- Ver en que Rango de Completo la tarea---
+        // Se comprueba desde el rango más pequeño al más grande.
+
+        if (diasDiferencia <= 7) {
+            semana.add(t); // Tareas de 0-7 días
+        } else if (diasDiferencia <= 15) {
+            dias.add(t);   // Tareas de 8-15 días
+        } else if (diasDiferencia <= 30) {
+            mes.add(t);    // Tareas de 16-30 días
+        }
+        // --Las tareas de más de 30 días no se añaden a ninguna lista--
     }
+
 
     public void eliminarCompletada(Tarea t) {
         if (t.getFechaCompletada() == null) {

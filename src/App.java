@@ -11,7 +11,7 @@ public class App {
     private LinkedList<ToDo> listaToDos; //Linked List que guarda ToDos
     private Scanner sc; //Objeto de tipo Scanner
     private Historial historial;
-    private HistorialCompletadas historialCompletadas;
+    private HistorialCompletadas historialCompletadas; //Historial de las tareas Completadas
 
     //--------Constructor-----------
     public App(){
@@ -527,14 +527,13 @@ public class App {
         System.out.println("");
         System.out.println("  BÚSQUEDA Y FILTROS:");
         System.out.println("    7. Ver tareas por prioridad (TODOS)");
-        System.out.println("    8. Ver todas las completadas (TODOS)");
-        System.out.println("    9. Ver hace cuanto se completaron las tareas (TODOS)");
-        System.out.println("    10. Buscar tareas por texto");
+        System.out.println("    8. Ver Histórico de tareas completadas");
+        System.out.println("    9. Buscar tareas por texto");
         System.out.println("");
         System.out.println("  SISTEMA:");
-        System.out.println("   11. Deshacer ultima accion");
-        System.out.println("   12. Limpiar historial de cambios");
-        System.out.println("   13. Guardar datos manualmente");  // Metodo para Guardar en Archivos
+        System.out.println("   10. Deshacer ultima accion");
+        System.out.println("   11. Limpiar historial de cambios");
+        System.out.println("   12. Guardar datos manualmente");
         System.out.println("");
         System.out.println("    0. Salir");
         System.out.println("---------------------------------------------");
@@ -576,28 +575,24 @@ public class App {
                     verTareasPorPrioridad();
                     break;
                 case 8:
-                    verTodasLasCompletadas();
-                    break;
-                case 9:
                     System.out.println(historialCompletadas);
                     break;
-                case 10:
+                case 9:
                     buscarTareasPorTexto();
                     break;
-                case 11:
+                case 10:
                     LinkedList<ToDo> estadoAnterior = historial.deshacer();
                     if (estadoAnterior != null) {
                         listaToDos = estadoAnterior;
                     }
                     break;
-                case 12:
+                case 11:
                     historial.limpiarHistorial();
                     break;
-                case 13:
+                case 12:
                     guardarDatos();
                     break;
                 case 0:
-
                     System.out.println("\n Guardando datos en archivo...");
                     guardarDatos();  // GUARDAR datos ANTES DE SALIR
                     System.out.println("CERRANDO APLICACION..........");
@@ -756,6 +751,13 @@ public class App {
 
                     // Agregar al To-Do actual
                     todoActual.addTarea(tarea);
+
+                    // --- HISTORIAL DE COMPLETADAS ---
+                    // Si la tarea cargada estaba completada, añadirla al historial de tareas completadas
+                    if (tarea.getStatus().equals("Completado") && tarea.getFechaCompletada() != null) {
+                        historialCompletadas.agregarCompletada(tarea);
+                    }
+
                 }
             }
 
