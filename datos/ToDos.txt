@@ -1,9 +1,0 @@
-TO-DO|colegio|2025-10-25
-TAREA|Leccion 1|Media|2023-05-15|Pendiente
-TAREA|Leccion 2|Media|2021-01-01|Completado
-TAREA|Graduacion|Alta|2024-03-09|Pendiente
----
-TO-DO|Carro|2025-10-25
-TAREA|CambiarLlanta|Alta|2024-10-10|Completado
-TAREA|Prueba1|Media|2005-02-09|Pendiente
----
