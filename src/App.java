@@ -21,7 +21,12 @@ public class App {
         historialCompletadas = new HistorialCompletadas();
         System.out.println("-------APLICACION INICIADA-------");
         //CARGAR DATOS desde ARCHIVO AL INICIAR
-        cargarDatos();
+        cargarDatos(); // Se carga el estado inicial de la listaToDos
+
+        // Guardamos el estado inicial como punto de partida en el historial
+        historial.guardarEstado(listaToDos);
+        // Ahora la pilaHistorial contiene el estado inicial
+
     }
 
 
