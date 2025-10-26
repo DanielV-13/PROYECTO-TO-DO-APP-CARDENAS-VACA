@@ -847,19 +847,20 @@ public class App {
         System.out.println("    5. Crear nueva tarea");
         System.out.println("    6. Completar tarea específica");
         System.out.println("    7. Regresar tarea completada a Pendiente");
-        System.out.println("    8. Editar tarea pendiente");
+        System.out.println("    9. Remover tarea específica");
         System.out.println("");
         System.out.println("  BÚSQUEDA Y FILTROS:");
-        System.out.println("    9. Ver tareas por prioridad (TODOS)");
-        System.out.println("   10. Ver Histórico de tareas completadas");
-        System.out.println("   11. Buscar tareas por texto");
+        System.out.println("   10. Ver tareas por prioridad (TODOS)");
+        System.out.println("   11. Ver Histórico de tareas completadas");
+        System.out.println("   12. Buscar tareas por texto");
         System.out.println("");
         System.out.println("  SISTEMA:");
-        System.out.println("   12. Deshacer ultima accion");
-        System.out.println("   13. Limpiar historial de cambios");
-        System.out.println("   14. Guardar datos manualmente");
+        System.out.println("   13. Deshacer ultima accion");
+        System.out.println("   14. Limpiar historial de cambios");
+        System.out.println("   15. Guardar datos manualmente");
         System.out.println("");
-        System.out.println("    0. Salir");System.out.println("---------------------------------------------");
+        System.out.println("    0. Salir");
+        System.out.println("---------------------------------------------");
         System.out.print("Seleccione una opción: ");
     }
 
