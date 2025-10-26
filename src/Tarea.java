@@ -35,11 +35,20 @@ public class Tarea {
     public void setStatus(String status){this.status=status;}
 
     public LocalDate getFechaCompletada(){return fechaCompletada;    }
+    public void setFechaCompletada(LocalDate fechaCompletada) {this.fechaCompletada = fechaCompletada;}
 
 //METODO to String de tarea
     @Override
     public String toString(){
-        String s= "Tarea: "+desc+ "\n-Prioridad: "+ prioridad+"\n-Fecha Maxima: "+ fecha+"\n-Status: "+status+"\n";
+        String s= "Tarea: "+desc+ "\n-Prioridad: "+ prioridad+"\n-Fecha Maxima: "+ fecha+"\n-Status: "+status;
+
+        // --EN CASO DE QUE LA TAREA ESTE COMPLETADA---
+        // Si la tarea está "Completado" Y la fechadeCompletacion no es null, añadimos la fecha
+        if (status.equals("Completado") && fechaCompletada != null) {
+            s += "\n-Completada el: " + fechaCompletada;
+        }
+
+        s += "\n"; //Salto de linea al final
 
         return s;
     }
