@@ -365,66 +365,76 @@ public class App {
     }
 
 
-    //*** 7) Completar una tarea específica
+    //*** 7) Completar una tarea específica (Selección por Número) ***
     public void completarTareaEspecifica(){
-        // Verificar que haya ToDos
+        // --- 1. Seleccionar el ToD0 ---
         if(listaToDos.isEmpty()){
             System.out.println("\nNo hay listas de ToDo disponibles.");
-            return; //Sale del metodo
+            return;
         }
-
-        // Mostrar ToDos
         verToDos();
-
-        // Seleccionar To-Do
-        System.out.print("Ingrese el nombre del ToDo: ");
+        System.out.print("Ingrese el nombre del ToDo donde está la tarea a completar: ");
         String nombreToDo = sc.nextLine();
-
         ToDo toDoSeleccionado = buscarToDoNombre(nombreToDo);
 
         if(toDoSeleccionado == null){
-            System.out.println("No existe un ToDo con ese nombre");
-            return; //Sale del metodo
+            System.out.println("No existe un ToDo con ese nombre.");
+            return;
         }
 
-        // Obtener las tareas pendientes de este To-Do
+        // --- 2. Obtener y mostrar TAREAS PENDIENTES numeradas ---
         LinkedList<Tarea> pendientes = toDoSeleccionado.verPendientes();
 
-        // Verificar que haya tareas pendientes en este To-Do
         if(pendientes.isEmpty()){
-            System.out.println("\nNo hay tareas pendientes en este ToDo");
-            return; //Salir del metodo
+            System.out.println("\nNo hay tareas pendientes en este ToDo para completar.");
+            return;
         }
 
-        //Como ya verificamos que si hay pendientes
-        System.out.println("---TAREAS PENDIENTES EN EL TO-DO "+ toDoSeleccionado.getNameToDo()+"---");
+        // Mostramos las tareas pendientes numeradas
+        System.out.println("\n--- TAREAS PENDIENTES en '" + toDoSeleccionado.getNameToDo() + "' ---");
+        int contador = 1;
         for(Tarea t: pendientes){
-            System.out.println(t);
+            System.out.println("----- Tarea #" + contador + " -----"); // Número de tarea
+            System.out.println(t); // Muestra la tarea
+            contador++;
         }
 
-        // Pedir cuál completar
-        System.out.print("\nIngrese la descripción de la tarea a completar: ");
-        String descBuscada = sc.nextLine();
+        // --- 3. Seleccionar la tarea por NÚMERO ---
+        int numeroTareaACompletar = -1; //Inicializamos la variable en -1
+        Tarea tareaACompletar = null;  //La variable donde se guardara la tarea a Eliminar
 
-        // RECORRER LA LISTA DE PENDIENTES con Iterator
-        ListIterator<Tarea> it = pendientes.listIterator();
-        boolean encontrada = false; //Variable bandera
+        boolean numeroValido = false;
+        while (!numeroValido) { //Mientras el numero sea invalido
+            System.out.print("\nIngrese el NÚMERO de la tarea PENDIENTE que desea completar (1-" + pendientes.size() + "): ");
+            try {
+                numeroTareaACompletar = sc.nextInt();
+                sc.nextLine(); // Limpiar buffer
 
-        while(it.hasNext()){
-            Tarea t= it.next();
-
-            if(t.getDesc().equals(descBuscada) ) {
-                t.completarTarea();  // COMPLETAR la tarea
-                System.out.println("Tarea '" + t.getDesc() + "' completada exitosamente.");
-                encontrada = true;
-                historial.guardarEstado(listaToDos);
-                historialCompletadas.agregarCompletada(t);
-                break;  // Salir después de completar
+                // Validar que el número esté en el rango correcto
+                if (numeroTareaACompletar >= 1 && numeroTareaACompletar <= pendientes.size()) {
+                    // Obtener la tarea correcta de la lista (índice es numero - 1)
+                    tareaACompletar = pendientes.get(numeroTareaACompletar - 1);
+                    numeroValido = true; // Salir del bucle
+                } else {
+                    System.out.println("Número fuera de rango. Intente de nuevo.");
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Entrada inválida. Debe ingresar un número.");
+                sc.nextLine(); // Limpiar buffer de entrada incorrecta
             }
-        }
+        } // Fin del while de validación
 
-        if(encontrada==false){
-            System.out.println(" No se encontró una tarea pendiente con esa descripción.");
+        // --- Ahora hay que completar la Tarea Seleccionada---
+        if (tareaACompletar != null) {
+            // Llama al métod0 completarTarea() del objeto Tarea
+            tareaACompletar.completarTarea();
+            System.out.println("\nTarea '" + tareaACompletar.getDesc() + "' completada exitosamente");
+
+            // Guardar estado para deshacer
+            historial.guardarEstado(listaToDos);
+
+            // Agregar al historial de completadas
+            historialCompletadas.agregarCompletada(tareaACompletar);
         }
     }
 
@@ -847,6 +857,7 @@ public class App {
         System.out.println("    5. Crear nueva tarea");
         System.out.println("    6. Completar tarea específica");
         System.out.println("    7. Regresar tarea completada a Pendiente");
+        System.out.println("    8. Editar tarea pendiente");
         System.out.println("    9. Remover tarea específica");
         System.out.println("");
         System.out.println("  BÚSQUEDA Y FILTROS:");
