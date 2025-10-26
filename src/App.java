@@ -901,36 +901,38 @@ public class App {
                 case 8:
                     editarTareaPendiente();
                     break;
-               case 9:
-                    verTareasPorPrioridad();
+                case 9:
+                    removerTarea();
                     break;
                 case 10:
-                    System.out.println(historialCompletadas);
+                    verTareasPorPrioridad();
                     break;
                 case 11:
-                    buscarTareasPorTexto();
+                    System.out.println(historialCompletadas);
                     break;
                 case 12:
+                    buscarTareasPorTexto();
+                    break;
+                case 13:
                     LinkedList<ToDo> estadoAnterior = historial.deshacer();
                     if (estadoAnterior != null) { listaToDos = estadoAnterior; }
                     break;
-                case 13:
+                case 14:
                     historial.limpiarHistorial();
                     break;
-                case 14:
+                case 15:
                     guardarDatos();
                     break;
-                // --- CASE OCULTO ---
+                // --- CASE OCULTO (numero de acceso 100) ---
                 case 100:
                     completarTareaConFechaManual();
                     break;
-                // ------------------------------------------
+
                 case 0:
                     System.out.println("\n Guardando datos en archivo...");
                     guardarDatos();
                     System.out.println("CERRANDO APLICACION..........");
                     break;
-
                 default:
                     System.out.println("\n Opción inválida. Intente nuevamente.");
             }
