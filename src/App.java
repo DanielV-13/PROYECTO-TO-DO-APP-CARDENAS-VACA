@@ -592,6 +592,11 @@ public class App {
                 case 12:
                     guardarDatos();
                     break;
+                // --- NUEVO CASE OCULTO solo para PRUEBA DE HISTORIAL COMPLETADA ---
+                case 13:
+                    completarTareaConFechaManual(); // Llamada al nuevo método
+                    break;
+                // -------------------------
                 case 0:
                     System.out.println("\n Guardando datos en archivo...");
                     guardarDatos();  // GUARDAR datos ANTES DE SALIR
@@ -773,6 +778,80 @@ public class App {
     }
 
 
+
+
+    //--------METODO OCULTO SOLO PARA ADMINISTRADORES (PARA PROBAR HISTORIALCOMPLETADAS)-----
+
+    private void completarTareaConFechaManual() {
+        // --- SELECCIÓN DE TAREA ---
+        if(listaToDos.isEmpty()){
+            System.out.println("\nNo hay listas de ToDo disponibles.");
+            return;
+        }
+        verToDos();
+        System.out.print("Ingrese el nombre del ToDo: ");
+        String nombreToDo = sc.nextLine();
+        ToDo toDoSeleccionado = buscarToDoNombre(nombreToDo);
+
+        if(toDoSeleccionado == null){
+            System.out.println("No existe un ToDo con ese nombre");
+            return;
+        }
+
+        LinkedList<Tarea> pendientes = toDoSeleccionado.verPendientes();
+        if(pendientes.isEmpty()){
+            System.out.println("\nNo hay tareas pendientes en este ToDo");
+            return;
+        }
+
+        System.out.println("---TAREAS PENDIENTES EN EL TO-DO "+ toDoSeleccionado.getNameToDo()+"---");
+        for(Tarea t: pendientes){
+            System.out.println(t);
+        }
+        System.out.print("\nIngrese la descripción de la tarea a completar manualmente: ");
+        String descBuscada = sc.nextLine();
+
+        // --- BÚSQUEDA Y MODIFICACIÓN DE FECHA ---
+        ListIterator<Tarea> it = pendientes.listIterator();
+        boolean encontrada = false;
+
+        while(it.hasNext()){
+            Tarea t= it.next();
+
+            if(t.getDesc().equals(descBuscada) ) {
+                // --- INICIO DE LA COMPLETACION MANUAL DE LA FECHA ---
+                System.out.println("\nIngrese la FECHA DE COMPLETACIÓN MANUAL para '" + t.getDesc() + "'");
+                System.out.print("Ingrese el año (ej: 2025): ");
+                int año = sc.nextInt();
+                System.out.print("Ingrese el mes (1-12): ");
+                int mes = sc.nextInt();
+                System.out.print("Ingrese el día (1-31): ");
+                int dia = sc.nextInt();
+                sc.nextLine(); // Limpiar buffer
+
+                LocalDate fechaCompletacionManual = LocalDate.of(año, mes, dia);
+
+                // Seteamos el status y la fecha manualmente
+                t.setStatus("Completado");
+                t.setFechaCompletada(fechaCompletacionManual); // Usamos el setter
+
+
+                System.out.println("Tarea '" + t.getDesc() + "' marcada como completada el " + fechaCompletacionManual + ".");
+                encontrada = true;
+                historial.guardarEstado(listaToDos);
+
+                // --- ACTUALIZAR EL HISTORIAL DE COMPLETADAS ---
+                // Añadimos la Tarea con la nueva fecha (la lógica interna la clasificará)
+                historialCompletadas.agregarCompletada(t);
+                // ----------------------------------------------
+                break;
+            }
+        }
+
+        if(encontrada==false){
+            System.out.println(" No se encontró una tarea pendiente con esa descripción.");
+        }
+    }
 
 
 
