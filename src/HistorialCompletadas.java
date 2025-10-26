@@ -36,12 +36,16 @@ public class HistorialCompletadas {
     }
 
 
+
+     //Elimina una tarea de las listas del historial (semana, dias, mes).
+     //Este métod0 debe llamarse DESPUÉS de que la tarea haya sido marcada
+     //como "Pendiente" nuevamente (es decir, después de llamar a t.descompletarTarea()).
     public void eliminarCompletada(Tarea t) {
-        if (t.getFechaCompletada() == null) {
-            semana.remove(t);
-            dias.remove(t);
-            mes.remove(t);
-        }
+
+        boolean removidoSemana = semana.remove(t);  // El métod0 .remove() no da error si el elemento no existe.
+        boolean removidoDias = dias.remove(t);
+        boolean removidoMes = mes.remove(t);
+
     }
 
     @Override
