@@ -1,9 +1,10 @@
 import java.util.LinkedList;
 import java.time.LocalDate;
 import java.util.ListIterator; //Importar list iterator
+import java.util.PriorityQueue; //Importar la Priority Queue para Ordenar por prioridad
 
 
-//No necesito que hacer ToDo <Tarea> porque no estoy trabajando con Genericos
+//No necesito que hacer ToD0 <Tarea> porque no estoy trabajando con Genericos
 //Sino que estoy trabajando EXCLUSIVAMENTE con la clase TAREA
 
 public class ToDo {
@@ -78,22 +79,41 @@ public class ToDo {
 
 
     //--------------USAR COMPARATOR EJEMPLO EN CLASE-------------
-    //3) Generar una vista de las Tareas pendientes
+    //3) Generar una vista de las Tareas pendientes (ORDENADAS CON PRIORITYQUEUE)
     public LinkedList<Tarea> verPendientes(){
-        System.out.println("------Tareas Pendientes-----\n");  //Variable local para almacenar tareas pendientes
+        System.out.println("------Tareas Pendientes (Ordenadas por Prioridad) -----\n");  //Variable local para almacenar tareas pendientes
 
-        //Creo la lista que va a devolver el metodo
-            LinkedList<Tarea> pendientes;
-            //RECORDAR: "lista" es el atributo de la clase ToDo que guarda la lista de Tareas
+        //Creo la lista que va a guardar las tareas pendientes en Desorden
+            LinkedList<Tarea> pendientesDesordenados;
+
+            //RECORDAR: "lista" es el atributo de la clase ToD0 que guarda la lista de Tareas
             ListaAvanzada<Tarea> listaAvanzada = new ListaAvanzada<>(lista);  //Una lista avanzada, que encapsula la lista de Tareas
 
             //Tarea PLANTILLA
             Tarea plantilla= new Tarea(null,null,null);
-            //Por defecto, el status ya es "Pendiente"
+            plantilla.setStatus("Pendiente"); //Aunque por defecto, el status ya es "Pendiente"
 
-            pendientes= listaAvanzada.buscar(new ComparatorStatus(), plantilla);
-            return pendientes;
+            //1) Buscamos todas las tareas pendientes
+            pendientesDesordenados= listaAvanzada.buscar(new ComparatorStatus(), plantilla);
 
+
+            //----- 2) Ahora ordenamos la lista de pendientes, usando una COLA DE PRIORIDAD-----
+            PriorityQueue<Tarea> colaOrdenada = new PriorityQueue<>(new ComparatorPrioridadOrden()); //Recibe el ComparadorPrioridadOrden
+
+            //Añadir tareas pendientes desordenadas a la Cola
+            for(Tarea E:pendientesDesordenados){
+                colaOrdenada.add(E);  //La cola va organizando las tareas internamente con el COMPARADORPrioridadOrdenar
+            }
+
+            //LinkedList que va a retornar el Metodo
+            LinkedList<Tarea> pendientesOrdenados= new LinkedList<>();
+
+            //Vaciamos la cola y ponemos las tareas ordenadas en la LinkedList
+            while(!colaOrdenada.isEmpty()){
+                pendientesOrdenados.add(colaOrdenada.poll());
+            }
+
+            return pendientesOrdenados; //Retorno lista con pendientes Ordenados
     }
 
     //4) Generar una vista de las Tareas Completadas
@@ -102,7 +122,7 @@ public class ToDo {
 
         //Creo la lista que va a devolver el metodo
         LinkedList<Tarea> completadas;
-        //RECORDAR: "lista" es el atributo de la clase ToDo que guarda la lista de Tareas
+        //RECORDAR: "lista" es el atributo de la clase ToD0 que guarda la lista de Tareas
         ListaAvanzada<Tarea> listaAvanzada = new ListaAvanzada<>(lista);  //Una lista avanzada, que encapsula la lista de Tareas
 
         //Tarea PLANTILLA

@@ -48,9 +48,54 @@ public class App {
     }
 
 
+    //*** 2) Mostrar SubMenu de Prioridades de las Tareas
+
+     //Muestra un menú para seleccionar una prioridad y valida la entrada.
+     //Sigue preguntando hasta que el usuario ingrese una opción válida (1, 2, o 3).
+     // RETORNO:  El String "Alta", "Media", o "Baja"
+
+    private String seleccionarPrioridad() {
+        int opcionPrioridad;
+
+        // Usamos un bucle infinito que solo se romperá cuando haya un 'return' valido
+        while (true) {
+            System.out.println("Seleccione la prioridad:");
+            System.out.println("  1. Alta");
+            System.out.println("  2. Media");
+            System.out.println("  3. Baja");
+            System.out.print("Ingrese opción (1-3): ");
+
+            try {
+                // 1. Intentar leer un número
+                opcionPrioridad = sc.nextInt();
+                sc.nextLine(); // Limpiar el buffer
+
+                // 2. Validar el rango del número
+                switch (opcionPrioridad) {
+                    case 1:
+                        return "Alta";  // Opción válida, salimos del bucle
+                    case 2:
+                        return "Media"; // Opción válida, salimos del bucle
+                    case 3:
+                        return "Baja";  // Opción válida, salimos del bucle
+                    default:
+                        // Si es un número, pero no es 1, 2, o 3
+                        System.out.println("\n¡Opción no válida! Por favor, ingrese 1, 2, o 3.\n");
+                }
+
+            } catch (java.util.InputMismatchException e) {  // Capturar el error si el usuario NO ingresó un dato Int
+
+                System.out.println("\n Debe ingresar un NÚMERO (1, 2, o 3).\n");
+                sc.nextLine(); // Limpiar el buffer de la entrada incorrecta
+            }
+        } // El bucle 'while' se repite si no hubo un return valido
+
+    }
+
+
 
     //------------METODOS PRINCIPALES---------
-    //*** 1) Crear un Nuevo ToDo
+    //*** 1) Crear un Nuevo ToD0
     public void crearNuevoToDo(){
         System.out.println("\nIngrese nombre del nuevo ToDo: ");
         String nombre= sc.nextLine();
@@ -101,7 +146,8 @@ public class App {
             System.out.println("----------------------\n");
         }
 
-        //*** 3) CREAR Y AGREGAR UNA TAREA A UN TODO EN LA APP
+
+        //*** 3) CREAR Y AGREGAR UNA TAREA A UN TOD0 EN LA APP
         public void crearTarea(){
             //Paso 1: Verificar que haya ToDos disponibles
             if(listaToDos.isEmpty()){
@@ -113,11 +159,11 @@ public class App {
             //Paso 2: Mostrar ToDos disponibles para agregar tareas
             verToDos();
 
-            //Paso 3: Seleccionar el ToDo donde agregar la tarea
+            //Paso 3: Seleccionar el ToD0 donde agregar la tarea
             System.out.println("Ingrese el nombre del ToDo donde quiere ingresar una Tarea: ");
             String nombreToDo =sc.nextLine();
 
-            //Buscar si existe un ToDo con ese nombre en la App
+            //Buscar si existe un ToD0 con ese nombre en la App
             ToDo toDoselect = buscarToDoNombre(nombreToDo);
 
             if(toDoselect == null){
@@ -125,10 +171,10 @@ public class App {
                 return; //sale del metodo
             }
 
-            //Como ya verifique que exisita el ToDo
+            //Como ya verifique que exisita el ToD0
             //Puedo proceder a agregar la tarea
 
-            //En caso de que el ToDo existe, pedir datos de la Tarea a ingresar
+            //En caso de que el ToD0 existe, pedir datos de la Tarea a ingresar
             System.out.println("\nProporcione datos de la Tarea a agregar-");
 
             // Pedir descripción
@@ -147,9 +193,8 @@ public class App {
 
             LocalDate fecha = LocalDate.of(año, mes, dia);
 
-            // Pedir prioridad
-            System.out.print("Ingrese la prioridad (Alta/Media/Baja): ");
-            String prioridad = sc.nextLine();
+            // Pedir prioridad - (CON EL METODO AUXILIAR "seleccionarPrioridad() )
+            String prioridad = seleccionarPrioridad();
 
             //Crear nueva Tarea y agregarla
             Tarea nuevaTarea=new Tarea(desc,fecha,prioridad);
@@ -161,7 +206,7 @@ public class App {
         }
 
 
-    //*** 4) Ver todas las tareas de un To-Do específico
+    //*** 4) Ver todas las tareas de un To-Do específico - Ordenadas por Prioridad
     public void verTareasDeToDo(){
         // Verificar que haya ToDos
         if(listaToDos.isEmpty()){
@@ -183,9 +228,38 @@ public class App {
             return; //Sale del metodo
         }
 
-        //Como ya verifique el To-Do existia, puedo
-        // Mostrar el To-Do completo
-        System.out.println("\n" + toDoselect);
+        //Como ya verifique el To-Do existia, puedo ahora mostrar las Tareas
+
+        System.out.println("\n---------------------------------------------------");
+        System.out.println("   Mostrando tareas de: " + toDoselect.getNameToDo());
+        System.out.println("-----------------------------------------------------");
+
+        // MOSTRAR TAREAS PENDIENTES (En ORden por Prioridad)
+        LinkedList<Tarea> pendientes = toDoselect.verPendientes();
+
+        if (pendientes.isEmpty()) {
+            System.out.println("  No hay tareas pendientes en este ToDo.");
+        } else {
+            // Iteramos la lista ordenada y la mostramos
+            for (Tarea t : pendientes) {
+                System.out.println(t); // toString() de Tarea
+                System.out.println(" ---------------");
+            }
+        }
+
+        // MOSTRAR TAREAS COMPLETADAS
+        LinkedList<Tarea> completadas = toDoselect.verCompletadas();
+
+        if (completadas.isEmpty()) {
+            System.out.println("\n  No hay tareas completadas en este ToDo.");
+        } else {
+            for (Tarea t : completadas) {
+                System.out.println(t); //toString() de Tarea
+                System.out.println(" ---------------");
+            }
+        }
+        System.out.println("--------------------------\n");
+
     }
 
 
@@ -193,7 +267,7 @@ public class App {
     //Buscar todas las tareas de una cierta prioridad en un Lista de ToDos
     public void verTareasPorPrioridad(){
         System.out.print("\nIngrese la prioridad a buscar (Alta/Media/Baja): ");
-        String prioridadBuscada = sc.nextLine();
+        String prioridadBuscada = seleccionarPrioridad(); //USA EL METODO AUXILIAR "seleccionarPrioridad()"
 
         System.out.println("\n------ TAREAS CON PRIORIDAD: " + prioridadBuscada + " ----------");
 
@@ -232,6 +306,7 @@ public class App {
                 }
             }
         }  //SALIENDO DEL WHILE
+
         if (encontroPrioridad==false){
             System.out.println("NO SE ENCONTRO NINGUNA TAREA CON PRIORIDAD -"+prioridadBuscada+"- EN LA APP");
         }
@@ -394,7 +469,7 @@ public class App {
     }
 
 
-    //*** 9) Eliminar un ToDo completo
+    //*** 9) Eliminar un ToD0 completo
     public void eliminarToDo() {
         // Verificar que haya ToDos
         if (listaToDos.isEmpty()) {
