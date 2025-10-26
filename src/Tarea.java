@@ -40,7 +40,15 @@ public class Tarea {
 //METODO to String de tarea
     @Override
     public String toString(){
-        String s= "Tarea: "+desc+ "\n-Prioridad: "+ prioridad+"\n-Fecha Maxima: "+ fecha+"\n-Status: "+status+"\n";
+        String s= "Tarea: "+desc+ "\n-Prioridad: "+ prioridad+"\n-Fecha Maxima: "+ fecha+"\n-Status: "+status;
+
+        // --EN CASO DE QUE LA TAREA ESTE COMPLETADA---
+        // Si la tarea está "Completado" Y la fechadeCompletacion no es null, añadimos la fecha
+        if (status.equals("Completado") && fechaCompletada != null) {
+            s += "\n-Completada el: " + fechaCompletada;
+        }
+
+        s += "\n"; //Salto de linea al final
 
         return s;
     }
