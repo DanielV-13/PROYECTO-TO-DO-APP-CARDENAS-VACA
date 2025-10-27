@@ -1174,7 +1174,7 @@ public class App {
         System.out.println("\n-------------------------------------");
         System.out.println("      TODO LIST APP - MENU PRINCIPAL");
         System.out.println("---------------------------------------");
-        System.out.println("  GESTIÓN DE LISTAS:");
+        /*System.out.println("  GESTIÓN DE LISTAS:");
         System.out.println("    1. Crear nuevo ToDo");
         System.out.println("    2. Ver todos los ToDos");
         System.out.println("    3. Ver tareas de un ToDo");
@@ -1206,7 +1206,7 @@ public class App {
         System.out.println("    0. Salir");
         System.out.println("---------------------------------------------");
         System.out.print("Seleccione una opción: ");
-    }
+   */ }
 
 
     //*** 11) Ejecutar la aplicación
