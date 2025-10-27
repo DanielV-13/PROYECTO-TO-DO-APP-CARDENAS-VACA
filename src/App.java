@@ -119,6 +119,48 @@ public class App {
         }
     }
 
+    //------ SUBMENU AUXILIAR --------
+    // Muestra opciones para filtrar globalmente por estatus
+
+    private void mostrarMenuFiltroStatus() {
+        int opcionSubMenu;
+        do {
+            System.out.println("\n--- Filtrar Todas las Tareas por Estatus ---");
+            System.out.println("  1. Ver TODAS las Pendientes");
+            System.out.println("  2. Ver TODAS las Completadas");
+            System.out.println("  0. Volver al Menú Principal");
+            System.out.print("Ingrese opción: ");
+
+            try {
+                opcionSubMenu = sc.nextInt();
+                sc.nextLine(); // Limpiar buffer
+
+                switch (opcionSubMenu) {
+                    case 1:
+                        verTodasLasPendientes();
+                        break;
+                    case 2:
+                        verTodasLasCompletadas();
+                        break;
+                    case 0:
+                        System.out.println("Volviendo al menú principal...");
+                        break; // Sale del bucle do-while
+                    default:
+                        System.out.println("Opción inválida. Intente de nuevo.");
+                        break;
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Entrada inválida. Debe ingresar un número.");
+                sc.nextLine(); // Limpiar buffer
+                opcionSubMenu = -1; // Forzar a repetir el bucle
+            }
+
+        } while (opcionSubMenu != 0); // Repetir hasta que elija 0
+    }
+
+
+
+
 
     //------------METODOS PRINCIPALES---------
     //*** 1) Crear un Nuevo ToD0
