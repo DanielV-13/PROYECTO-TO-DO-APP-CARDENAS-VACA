@@ -1,9 +1,9 @@
-TO-DO|Uees|2025-10-26
+TO-DO|Uees|2025-10-27
 TAREA|ENTREGAR Proyecto de Estructura de Datos|Alta|2025-10-27|Pendiente|-
 ---
-TO-DO|Casa|2025-10-26
-TAREA|Limpiar la cocina|Baja|2025-10-31|Completado|-
+TO-DO|Casa|2025-10-27
+TAREA|Limpiar la cocina|Baja|2025-10-31|Completado|2025-10-27
 ---
-TO-DO|Personal|2025-10-26
+TO-DO|Personal|2025-10-27
 TAREA|Pasear al perro|Alta|2025-10-27|Pendiente|-
 ---

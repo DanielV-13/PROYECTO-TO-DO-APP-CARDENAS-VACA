@@ -163,7 +163,7 @@ public class App {
 
 
     //------------METODOS PRINCIPALES---------
-    //*** 1) Crear un Nuevo ToD0
+    //***Crear un Nuevo ToD0
     public void crearNuevoToDo(){
         System.out.println("\nIngrese nombre del nuevo ToDo: ");
         String nombre= sc.nextLine();
@@ -186,7 +186,7 @@ public class App {
 
     }
 
-    //*** 2) VER TODOS LOS TODOS
+    //*** VER TODOS LOS TODOS
         public void verToDos(){
             System.out.println("\n----ToDos Actuales----");
 
@@ -215,7 +215,7 @@ public class App {
         }
 
 
-        //*** 3) CREAR Y AGREGAR UNA TAREA A UN TOD0 EN LA APP
+        //*** CREAR Y AGREGAR UNA TAREA A UN TOD0 EN LA APP
         public void crearTarea(){
             //Paso 1: Verificar que haya ToDos disponibles
             if(listaToDos.isEmpty()){
@@ -274,7 +274,7 @@ public class App {
         }
 
 
-    //*** 4) Ver todas las tareas de un To-Do específico - Ordenadas por Prioridad
+    //*** Ver todas las tareas de un To-Do específico - Ordenadas por Prioridad
     public void verTareasDeToDo(){
         // Verificar que haya ToDos
         if(listaToDos.isEmpty()){
@@ -331,7 +331,7 @@ public class App {
     }
 
 
-    //*** 5) MÉTOD0 OBLIGATORIO - Recuperar solo las tareas de una prioridad dada de todos los ToDos
+    //*** MÉTOD0 OBLIGATORIO - Recuperar solo las tareas de una prioridad dada de todos los ToDos
     //Buscar todas las tareas de una cierta prioridad en un Lista de ToDos
     public void verTareasPorPrioridad(){
         System.out.print("\nIngrese la prioridad a buscar (Alta/Media/Baja): ");
@@ -385,7 +385,7 @@ public class App {
 
 
 
-    //*** 6) MÉTOD0 OBLIGATORIO - Recuperar todas las tareas marcadas como hechas de todos los To-DO
+    //*** MÉTOD0 OBLIGATORIO - Recuperar todas las tareas marcadas como hechas de todos los To-DO
     //Buscar todas las tareas cumplidas en un Lista de ToDos
     public void verTodasLasCompletadas(){
         System.out.println("\n-------TODAS LAS TAREAS COMPLETADAS-----------");
@@ -462,7 +462,7 @@ public class App {
 
 
 
-    //*** 7) Completar una tarea específica (Selección por Número) ***
+    //*** Completar una tarea específica (Selección por Número) ***
     public void completarTareaEspecifica(){
         // --- 1. Seleccionar el ToD0 ---
         if(listaToDos.isEmpty()){
@@ -536,7 +536,7 @@ public class App {
     }
 
 
-    //------FUNCIONALIDAD EXTRA (Usando ToD0.completarTodo)--------
+    //------FUNCIONALIDAD EXTRA (Se usa ToD0.completarTodo)--------
     // Marcar todas las tareas de un ToD0 específico como completadas
 
     public void marcarTodoCompletoEnToDo() {
@@ -584,7 +584,7 @@ public class App {
         System.out.println("\n Todas las tareas pendientes en '" + toDoSeleccionado.getNameToDo() + "' han sido marcadas como completadas");
     }
 
-        //------FUNCIONALIDAD EXTRA (Integrando ToD0.eliminarCompletadas)--------
+        //------FUNCIONALIDAD EXTRA (Se usa ToD0.eliminarCompletadas)--------
     // Limpiar (eliminar permanentemente) las tareas completadas de un ToD0
 
     public void limpiarCompletadasDeToDo() {
@@ -1031,7 +1031,7 @@ public class App {
 
 
 
-    //*** 8) Buscar tareas por texto en la descripción
+    //*** METODO PARA Buscar tareas por texto en la descripción
     public void buscarTareasPorTexto(){
         System.out.print("\nIngrese el texto a buscar: ");
         String textoBuscado = sc.nextLine().toLowerCase();
@@ -1076,7 +1076,7 @@ public class App {
     }
 
 
-    //*** 9) Eliminar un ToD0 completo
+    //***METODO PARA  Eliminar un ToD0 completo
     public void eliminarToDo() {
         // Verificar que haya ToDos
         if (listaToDos.isEmpty()) {
@@ -1267,7 +1267,7 @@ public class App {
     }
 
 
-    // *** MÉTODO AUXILIAR: INTERSECCIÓN POR PRIORIDAD ***
+    // *** MÉTOD0 AUXILIAR: INTERSECCIÓN POR PRIORIDAD ***
     private LinkedList<Tarea> interseccionPorPrioridad(ToDo todo1, ToDo todo2) {
         // Pedir la prioridad a buscar
         System.out.println("\n¿Qué prioridad desea buscar en ambos ToDos?");
@@ -1299,7 +1299,7 @@ public class App {
     }
 
 
-    // *** MÉTODO AUXILIAR: INTERSECCIÓN POR ESTADO ***
+    // *** MÉTOD0 AUXILIAR: INTERSECCIÓN POR ESTADO ***
     private LinkedList<Tarea> interseccionPorEstado(ToDo todo1, ToDo todo2) {
         // Pedir el estado a buscar
         System.out.println("\n¿Qué estado desea buscar en ambos ToDos?");
@@ -1344,7 +1344,7 @@ public class App {
     }
 
 
-    // *** MÉTODO AUXILIAR: INTERSECCIÓN POR DESCRIPCIÓN ***
+    // *** MÉTOD0 AUXILIAR: INTERSECCIÓN POR DESCRIPCIÓN ***
     private LinkedList<Tarea> interseccionPorDescripcion(ToDo todo1, ToDo todo2) {
         System.out.print("\nIngrese el texto a buscar en las descripciones: ");
         String textoBuscado = sc.nextLine();
@@ -1374,12 +1374,12 @@ public class App {
     }
 
 
-    //*** 10) Mostrar menú principal
+    //*******MOSTRAR MENU PRINCIPAL/*****
     public void mostrarMenu(){
         System.out.println("\n-------------------------------------");
         System.out.println("      TODO LIST APP - MENU PRINCIPAL");
         System.out.println("---------------------------------------");
-        /*System.out.println("  GESTIÓN DE LISTAS:");
+        System.out.println("  GESTIÓN DE LISTAS:");
         System.out.println("    1. Crear nuevo ToDo");
         System.out.println("    2. Ver todos los ToDos");
         System.out.println("    3. Ver tareas de un ToDo");
@@ -1411,10 +1411,10 @@ public class App {
         System.out.println("    0. Salir");
         System.out.println("---------------------------------------------");
         System.out.print("Seleccione una opción: ");
-   */ }
+   }
 
 
-    //*** 11) Ejecutar la aplicación
+    //*** EJECUTAR LA APLICACION****
     public void ejecutar(){
         int opcion;
 
@@ -1433,39 +1433,29 @@ public class App {
                 opcion = -1; // Asignar un valor inválido
             }
             switch(opcion){
-                case 1:
-                    crearNuevoToDo();
+                case 1: crearNuevoToDo();
                     break;
-                case 2:
-                    verToDos();
+                case 2: verToDos();
                     break;
-                case 3:
-                    verTareasDeToDo();
+                case 3: verTareasDeToDo();
                     break;
-                case 4:
-                    editarNombreToDo();
+                case 4: editarNombreToDo();
                     break;
                 // --- FIN NUEVO CASE ---
                 case 5: eliminarToDo(); break;
                 case 6: crearTarea(); break;
                 case 7: completarTareaEspecifica(); break;
-                case 8:
-                    marcarTodoCompletoEnToDo();
+                case 8: marcarTodoCompletoEnToDo();
                     break;
-                case 9:
-                    regresarTareaAPendiente();
+                case 9: regresarTareaAPendiente();
                     break;
-                case 10:
-                    editarTareaPendiente();
+                case 10: editarTareaPendiente();
                     break;
-                case 11:
-                    removerTarea();
+                case 11: removerTarea();
                     break;
-                case 12:
-                    limpiarCompletadasDeToDo();
+                case 12: limpiarCompletadasDeToDo();
                     break;
-                case 13:
-                    moverTareaEntreListas();
+                case 13: moverTareaEntreListas();
                     break;
 
                 case 14: verTareasPorPrioridad(); break;
@@ -1489,7 +1479,7 @@ public class App {
                     break;
                 case 20: historial.limpiarHistorial(); break;
                 case 21: guardarDatos(); break;
-                // --- CASE OCULTO (Codigo de acceso 100) ---
+                // --- CASE OCULTO (Codigo de acceso 99) ---
                 case 99: interseccionEntreToDos(); break;
             // --- CASE OCULTO (Codigo de acceso 100) ---
                 case 100:
@@ -1753,12 +1743,6 @@ public class App {
             System.out.println(" No se encontró una tarea pendiente con esa descripción.");
         }
     }
-
-
-
-
-
-
 
 
 
