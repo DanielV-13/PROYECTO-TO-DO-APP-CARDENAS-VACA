@@ -1161,12 +1161,217 @@ public class App {
         historial.guardarEstado(listaToDos);
     }
 
+    //------FUNCIONALIDAD EXTRA--------
+    // Metodo para encontrar la interseccion de 2 ToDos
+    public void interseccionEntreToDos() {
+        System.out.println("\n===== INTERSECCIÓN DE TAREAS ENTRE DOS TODOS =====");
+
+        // --- 1. Verificar que haya al menos 2 ToDos ---
+        if (listaToDos.size() < 2) {
+            System.out.println("Se necesitan al menos 2 ToDos para realizar una intersección.");
+            System.out.println("Actualmente hay " + listaToDos.size() + " ToDo(s) en la aplicación.\n");
+            return;
+        }
+
+        // --- 2. Mostrar todos los ToDos disponibles ---
+        verToDos();
+
+        // --- 3. Seleccionar primer ToDo ---
+        System.out.print("\nIngrese el nombre del PRIMER ToDo: ");
+        String nombreToDo1 = sc.nextLine();
+        ToDo todo1 = buscarToDoNombre(nombreToDo1);
+
+        if (todo1 == null) {
+            System.out.println("No se encontró el primer ToDo.");
+            return;
+        }
+
+        // --- 4. Seleccionar segundo ToDo ---
+        System.out.print("Ingrese el nombre del SEGUNDO ToDo: ");
+        String nombreToDo2 = sc.nextLine();
+        ToDo todo2 = buscarToDoNombre(nombreToDo2);
+
+        if (todo2 == null) {
+            System.out.println("No se encontró el segundo ToDo.");
+            return;
+        }
+
+        // --- 5. Verificar que no sean el mismo ToDo ---
+        if (todo1 == todo2) {
+            System.out.println("\nError: Ha seleccionado el mismo ToDo dos veces.");
+            System.out.println("Por favor, seleccione dos ToDos diferentes.\n");
+            return;
+        }
+
+        // --- 6. Verificar que ambos ToDos tengan tareas ---
+        if (todo1.getTareas().isEmpty() || todo2.getTareas().isEmpty()) {
+            System.out.println("\nUno o ambos ToDos están vacíos.");
+            System.out.println("- '" + todo1.getNameToDo() + "' tiene " + todo1.getSize() + " tarea(s)");
+            System.out.println("- '" + todo2.getNameToDo() + "' tiene " + todo2.getSize() + " tarea(s)\n");
+            return;
+        }
+
+        // --- 7. Seleccionar el CRITERIO de comparación ---
+        System.out.println("\n¿Qué criterio desea usar para la intersección?");
+        System.out.println("  1. Prioridad (Alta, Media, Baja)");
+        System.out.println("  2. Estado (Pendiente, Completado)");
+        System.out.println("  3. Descripción (coincidencias de texto)");
+        System.out.print("Seleccione una opción (1-3): ");
+
+        int criterio;
+        try {
+            criterio = sc.nextInt();
+            sc.nextLine(); // Limpiar buffer
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Entrada inválida. Debe ingresar un número.");
+            sc.nextLine();
+            return;
+        }
+
+        // --- 8. Realizar la intersección según el criterio ---
+        LinkedList<Tarea> resultado = new LinkedList<>();
+
+        switch (criterio) {
+            case 1: // PRIORIDAD
+                resultado = interseccionPorPrioridad(todo1, todo2);
+                break;
+            case 2: // ESTADO
+                resultado = interseccionPorEstado(todo1, todo2);
+                break;
+            case 3: // DESCRIPCIÓN
+                resultado = interseccionPorDescripcion(todo1, todo2);
+                break;
+            default:
+                System.out.println("Opción inválida.");
+                return;
+        }
+
+        // --- 9. Mostrar resultados ---
+        System.out.println("\n========== RESULTADOS DE LA INTERSECCIÓN ==========");
+        System.out.println("ToDo 1: '" + todo1.getNameToDo() + "' (" + todo1.getSize() + " tareas)");
+        System.out.println("ToDo 2: '" + todo2.getNameToDo() + "' (" + todo2.getSize() + " tareas)");
+        System.out.println("---------------------------------------------------");
+
+        if (resultado.isEmpty()) {
+            System.out.println("\nNo se encontraron tareas en común entre ambos ToDos.");
+        } else {
+            System.out.println("\nSe encontraron " + resultado.size() + " tarea(s) en común:\n");
+            int contador = 1;
+            for (Tarea t : resultado) {
+                System.out.println("--- Tarea #" + contador + " ---");
+                System.out.println(t);
+                contador++;
+            }
+        }
+        System.out.println("===================================================\n");
+    }
 
 
+    // *** MÉTODO AUXILIAR: INTERSECCIÓN POR PRIORIDAD ***
+    private LinkedList<Tarea> interseccionPorPrioridad(ToDo todo1, ToDo todo2) {
+        // Pedir la prioridad a buscar
+        System.out.println("\n¿Qué prioridad desea buscar en ambos ToDos?");
+        String prioridadBuscada = seleccionarPrioridad(); // Usa el método auxiliar existente
+
+        System.out.println("\nBuscando tareas con prioridad '" + prioridadBuscada + "' en ambos ToDos...");
+
+        // Crear una tarea plantilla con la prioridad buscada
+        Tarea plantilla = new Tarea(null, null, null);
+        plantilla.setPrioridad(prioridadBuscada);
+
+        // Crear ListaAvanzada para cada ToDo
+        ListaAvanzada<Tarea> listaAvanzada1 = new ListaAvanzada<>(todo1.getTareas());
+        ListaAvanzada<Tarea> listaAvanzada2 = new ListaAvanzada<>(todo2.getTareas());
+
+        // Buscar tareas con esa prioridad en ambos ToDos
+        LinkedList<Tarea> tareasToDo1 = listaAvanzada1.buscar(new ComparatorPrioridad(), plantilla);
+        LinkedList<Tarea> tareasToDo2 = listaAvanzada2.buscar(new ComparatorPrioridad(), plantilla);
+
+        System.out.println("  - '" + todo1.getNameToDo() + "' tiene " + tareasToDo1.size() + " tarea(s) con prioridad " + prioridadBuscada);
+        System.out.println("  - '" + todo2.getNameToDo() + "' tiene " + tareasToDo2.size() + " tarea(s) con prioridad " + prioridadBuscada);
+
+        // Combinar ambas listas (UNIÓN, no intersección de objetos)
+        LinkedList<Tarea> resultado = new LinkedList<>();
+        resultado.addAll(tareasToDo1);
+        resultado.addAll(tareasToDo2);
+
+        return resultado;
+    }
 
 
+    // *** MÉTODO AUXILIAR: INTERSECCIÓN POR ESTADO ***
+    private LinkedList<Tarea> interseccionPorEstado(ToDo todo1, ToDo todo2) {
+        // Pedir el estado a buscar
+        System.out.println("\n¿Qué estado desea buscar en ambos ToDos?");
+        System.out.println("  1. Pendiente");
+        System.out.println("  2. Completado");
+        System.out.print("Seleccione opción (1-2): ");
+
+        int opcionEstado;
+        try {
+            opcionEstado = sc.nextInt();
+            sc.nextLine();
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Entrada inválida.");
+            sc.nextLine();
+            return new LinkedList<>();
+        }
+
+        String estadoBuscado = (opcionEstado == 1) ? "Pendiente" : "Completado";
+        System.out.println("\nBuscando tareas con estado '" + estadoBuscado + "' en ambos ToDos...");
+
+        // Crear tarea plantilla
+        Tarea plantilla = new Tarea(null, null, null);
+        plantilla.setStatus(estadoBuscado);
+
+        // Crear ListaAvanzada para cada ToDo
+        ListaAvanzada<Tarea> listaAvanzada1 = new ListaAvanzada<>(todo1.getTareas());
+        ListaAvanzada<Tarea> listaAvanzada2 = new ListaAvanzada<>(todo2.getTareas());
+
+        // Buscar tareas con ese estado en ambos ToDos
+        LinkedList<Tarea> tareasToDo1 = listaAvanzada1.buscar(new ComparatorStatus(), plantilla);
+        LinkedList<Tarea> tareasToDo2 = listaAvanzada2.buscar(new ComparatorStatus(), plantilla);
+
+        System.out.println("  - '" + todo1.getNameToDo() + "' tiene " + tareasToDo1.size() + " tarea(s) con estado " + estadoBuscado);
+        System.out.println("  - '" + todo2.getNameToDo() + "' tiene " + tareasToDo2.size() + " tarea(s) con estado " + estadoBuscado);
+
+        // Combinar ambas listas
+        LinkedList<Tarea> resultado = new LinkedList<>();
+        resultado.addAll(tareasToDo1);
+        resultado.addAll(tareasToDo2);
+
+        return resultado;
+    }
 
 
+    // *** MÉTODO AUXILIAR: INTERSECCIÓN POR DESCRIPCIÓN ***
+    private LinkedList<Tarea> interseccionPorDescripcion(ToDo todo1, ToDo todo2) {
+        System.out.print("\nIngrese el texto a buscar en las descripciones: ");
+        String textoBuscado = sc.nextLine();
+
+        System.out.println("\nBuscando tareas que contengan '" + textoBuscado + "' en ambos ToDos...");
+
+        // Crear tarea plantilla con el texto buscado
+        Tarea plantilla = new Tarea(textoBuscado, null, null);
+
+        // Crear ListaAvanzada para cada ToDo
+        ListaAvanzada<Tarea> listaAvanzada1 = new ListaAvanzada<>(todo1.getTareas());
+        ListaAvanzada<Tarea> listaAvanzada2 = new ListaAvanzada<>(todo2.getTareas());
+
+        // Buscar tareas con ese texto en ambos ToDos
+        LinkedList<Tarea> tareasToDo1 = listaAvanzada1.buscar(new ComparatorDescripcion(), plantilla);
+        LinkedList<Tarea> tareasToDo2 = listaAvanzada2.buscar(new ComparatorDescripcion(), plantilla);
+
+        System.out.println("  - '" + todo1.getNameToDo() + "' tiene " + tareasToDo1.size() + " tarea(s) que contienen '" + textoBuscado + "'");
+        System.out.println("  - '" + todo2.getNameToDo() + "' tiene " + tareasToDo2.size() + " tarea(s) que contienen '" + textoBuscado + "'");
+
+        // Combinar ambas listas
+        LinkedList<Tarea> resultado = new LinkedList<>();
+        resultado.addAll(tareasToDo1);
+        resultado.addAll(tareasToDo2);
+
+        return resultado;
+    }
 
 
     //*** 10) Mostrar menú principal
@@ -1284,6 +1489,8 @@ public class App {
                     break;
                 case 20: historial.limpiarHistorial(); break;
                 case 21: guardarDatos(); break;
+                // --- CASE OCULTO (Codigo de acceso 100) ---
+                case 99: interseccionEntreToDos(); break;
             // --- CASE OCULTO (Codigo de acceso 100) ---
                 case 100:
                     completarTareaConFechaManual();
