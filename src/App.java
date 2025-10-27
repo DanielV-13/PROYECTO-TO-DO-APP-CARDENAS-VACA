@@ -616,10 +616,109 @@ public class App {
         System.out.println("\n Las tareas completadas en '" + toDoSeleccionado.getNameToDo() + "' han sido eliminadas permanentemente de la lista");
     }
 
+    //------FUNCIONALIDAD EXTRA--------
+    // Mover una tarea de una lista a otra
 
+    public void moverTareaEntreListas() {
+        // --- 1. Verificar si hay al menos dos ToDos para mover ---
+        if (listaToDos.size() < 2) {
+            System.out.println("\nSe necesitan al menos dos listas de ToDo para mover tareas entre listas");
+            return;
+        }
 
+        // --- 2. Seleccionar ToD0 de ORIGEN ---
+        System.out.println("\n--- Mover Tarea entre Listas ---");
+        verToDos();
+        System.out.print("Ingrese el nombre del ToDo de ORIGEN (de donde saca la tarea): ");
+        String nombreToDoOrigen = sc.nextLine();
+        ToDo toDoOrigen = buscarToDoNombre(nombreToDoOrigen);
 
+        if (toDoOrigen == null) {
+            System.out.println("No se encontró el ToDo de origen");
+            return;
+        }
 
+        // --- 3. Seleccionar TAREA a mover ---
+        LinkedList<Tarea> tareasOrigen = toDoOrigen.getTareas();
+        if (tareasOrigen.isEmpty()) {
+            System.out.println("\nEl ToDo '" + toDoOrigen.getNameToDo() + "' no tiene tareas para mover");
+            return;
+        }
+
+        System.out.println("\n--- TAREAS en '" + toDoOrigen.getNameToDo() + "' ---");
+        int contador = 1;
+        // Creamos una lista temporal para mostrar y seleccionar por índice
+        LinkedList<Tarea> tareasParaMostrar = new LinkedList<>(tareasOrigen);
+        for (Tarea t : tareasParaMostrar) {
+            System.out.println("----- Tarea #" + contador + " -----");
+            System.out.println(t);
+            contador++;
+        }
+
+        int numeroTareaAMover = -1; //Variable inicializada en -1
+        Tarea tareaAMover = null; //Variable inicializada en null
+        boolean numeroValido = false;
+
+        while (!numeroValido) {
+            System.out.print("\nIngrese el NÚMERO de la tarea que desea mover (1-" + tareasParaMostrar.size() + "): ");
+            try {
+                numeroTareaAMover = sc.nextInt();
+                sc.nextLine(); // Limpiar buffer
+
+                if (numeroTareaAMover >= 1 && numeroTareaAMover <= tareasParaMostrar.size()) {
+                    tareaAMover = tareasParaMostrar.get(numeroTareaAMover - 1); //numero-1 retorna el indice
+                    numeroValido = true;
+                } else {
+                    System.out.println("Número fuera de rango. Intente de nuevo");
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Entrada inválida. Debe ingresar un número");
+                sc.nextLine();
+            }
+        }
+
+        // --- 4. Seleccionar ToD0 de DESTINO ---
+        System.out.println("\n--- Seleccione el ToDo de DESTINO ---");
+        verToDos(); // Mostramos la lista de ToDos de nuevo
+        System.out.print("Ingrese el nombre del ToDo de DESTINO (a donde va la tarea): ");
+        String nombreToDoDestino = sc.nextLine();
+        ToDo toDoDestino = buscarToDoNombre(nombreToDoDestino);
+
+        if (toDoDestino == null) {
+            System.out.println("No se encontró el ToDo de destino");
+            return;
+        }
+
+        // --- 5. Validar que Origen y Destino no sean el mismo ---
+        if (toDoOrigen == toDoDestino) {
+            System.out.println("\nError: No se puede mover una tarea a la misma lista de la que salió");
+            return;
+        }
+
+        // --- 6. Ejecutar el movimiento (Remover de Origen, Añadir a Destino) ---
+        boolean removidoExitosamente = false;
+        // Usamos ListIterator en la lista ORIGINAL (tareasOrigen) para remover
+        ListIterator<Tarea> it = tareasOrigen.listIterator();
+        while (it.hasNext()) {
+            if (it.next() == tareaAMover) { // Comparamos por referencia de objeto
+                it.remove(); // Eliminamos la tarea de la lista de Origen
+                removidoExitosamente = true;
+                break;
+            }
+        }
+
+        if (removidoExitosamente) {
+            // Añadimos la misma tarea (el objeto) a la lista de Destino
+            toDoDestino.addTarea(tareaAMover);
+
+            // Guardar estado para Deshacer
+            historial.guardarEstado(listaToDos);
+
+            System.out.println("\nTarea '" + tareaAMover.getDesc() + "' movida de '" + toDoOrigen.getNameToDo() + "' a '" + toDoDestino.getNameToDo());
+        } else {
+            System.out.println("\nError: No se pudo remover la tarea de la lista de origen");
+        }
+    }
 
 
     //------FUNCIONALIDAD EXTRA--------
@@ -1090,18 +1189,19 @@ public class App {
         System.out.println("   10. Editar tarea pendiente");
         System.out.println("   11. Remover tarea específica");
         System.out.println("   12. Limpiar completadas de un ToDo");
+        System.out.println("   13. Mover tarea entre listas");
         System.out.println("");
         System.out.println("  BÚSQUEDA Y FILTROS:");
-        System.out.println("   13. Ver tareas por prioridad (TODOS)");
-        System.out.println("   14. Ver Tareas Globales por Estatus");
-        System.out.println("   15. Ver Histórico de tareas completadas");
-        System.out.println("   16. Buscar tareas por texto de la Descripcion");
+        System.out.println("   14. Ver tareas por prioridad (TODOS)");
+        System.out.println("   15. Ver Tareas Globales por Estatus");
+        System.out.println("   16. Ver Histórico de tareas completadas");
+        System.out.println("   17. Buscar tareas por texto de la Descripcion");
         System.out.println("");
         System.out.println("  SISTEMA:");
-        System.out.println("   17. Deshacer ultima accion");
-        System.out.println("   18. Rehacer ultima accion");
-        System.out.println("   19. Limpiar historial de cambios");
-        System.out.println("   20. Guardar datos manualmente");
+        System.out.println("   18. Deshacer ultima accion");
+        System.out.println("   19. Rehacer ultima accion");
+        System.out.println("   20. Limpiar historial de cambios");
+        System.out.println("   21. Guardar datos manualmente");
         System.out.println("");
         System.out.println("    0. Salir");
         System.out.println("---------------------------------------------");
@@ -1160,38 +1260,31 @@ public class App {
                     limpiarCompletadasDeToDo();
                     break;
                 case 13:
-                    verTareasPorPrioridad();
+                    moverTareaEntreListas();
                     break;
-                case 14:
-                    mostrarMenuFiltroStatus();
-                    break;
-                case 15:
-                    System.out.println(historialCompletadas);
-                    break;
-                case 16:
-                    buscarTareasPorTexto();
-                    break;
-                case 17:
+
+                case 14: verTareasPorPrioridad(); break;
+                case 15: mostrarMenuFiltroStatus(); break;
+                case 16: System.out.println(historialCompletadas); break;
+                case 17: buscarTareasPorTexto(); break;
+
+                case 18:
                     LinkedList<ToDo> estadoAnterior = historial.deshacer();
                     if (estadoAnterior != null) {
                         listaToDos = estadoAnterior;
                         resincronizarHistorialCompletadas();
                     }
                     break;
-                case 18:
+                case 19:
                     LinkedList<ToDo> estadoSiguiente = historial.rehacer();
                     if (estadoSiguiente != null) {
                         listaToDos = estadoSiguiente;
                         resincronizarHistorialCompletadas();
                     }
                     break;
-                case 19:
-                    historial.limpiarHistorial();
-                    break;
-                case 20:
-                    guardarDatos();
-                    break;
-                // --- CASE OCULTO (Codigo de acceso 100) ---
+                case 20: historial.limpiarHistorial(); break;
+                case 21: guardarDatos(); break;
+            // --- CASE OCULTO (Codigo de acceso 100) ---
                 case 100:
                     completarTareaConFechaManual();
                     break;

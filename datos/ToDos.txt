@@ -1,4 +1,4 @@
-TO-DO|UEES 🏫|2025-10-26
+TO-DO|UEES|2025-10-26
 TAREA|dEBER1|Alta|2025-08-09|Pendiente|-
 TAREA|DEBER2|Baja|2025-02-01|Pendiente|-
 TAREA|Deber3|Alta|2025-09-08|Pendiente|-
