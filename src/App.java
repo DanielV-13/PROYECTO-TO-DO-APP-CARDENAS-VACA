@@ -384,7 +384,6 @@ public class App {
         System.out.println("---------------------------------------\n");
     }
 
-// Archivo: src/App.java (Añadir este nuevo método)
 
     //------FUNCIONALIDAD EXTRA--------
     // Ver TODAS las tareas PENDIENTES de TODOS los ToDos
