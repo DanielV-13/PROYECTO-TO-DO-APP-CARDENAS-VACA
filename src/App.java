@@ -970,8 +970,9 @@ public class App {
         System.out.println("");
         System.out.println("  SISTEMA:");
         System.out.println("   14. Deshacer ultima accion");
-        System.out.println("   15. Limpiar historial de cambios");
-        System.out.println("   16. Guardar datos manualmente");
+        System.out.println("   15. Rehacer ultima accion");
+        System.out.println("   16. Limpiar historial de cambios");
+        System.out.println("   17. Guardar datos manualmente");
         System.out.println("");
         System.out.println("    0. Salir");
         System.out.println("---------------------------------------------");
@@ -1027,8 +1028,15 @@ public class App {
                         resincronizarHistorialCompletadas();
                     }
                     break;
-                case 15: historial.limpiarHistorial(); break;
-                case 16: guardarDatos(); break;
+                case 15:
+                    LinkedList<ToDo> estadoSiguiente = historial.rehacer();
+                    if (estadoSiguiente != null) {
+                        listaToDos = estadoSiguiente;
+                        resincronizarHistorialCompletadas();
+                    }
+                    break;
+                case 16: historial.limpiarHistorial(); break;
+                case 17: guardarDatos(); break;
                 // --- CASE OCULTO (Codigo de acceso 100) ---
                 case 100: completarTareaConFechaManual(); break;
 
