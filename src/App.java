@@ -437,10 +437,10 @@ public class App {
                     tareaACompletar = pendientes.get(numeroTareaACompletar - 1);
                     numeroValido = true; // Salir del bucle
                 } else {
-                    System.out.println("Número fuera de rango. Intente de nuevo.");
+                    System.out.println("Número fuera de rango. Intente de nuevo");
                 }
             } catch (java.util.InputMismatchException e) {
-                System.out.println("Entrada inválida. Debe ingresar un número.");
+                System.out.println("Entrada inválida. Debe ingresar un número");
                 sc.nextLine(); // Limpiar buffer de entrada incorrecta
             }
         } // Fin del while de validación
@@ -592,10 +592,10 @@ public class App {
                     numeroValido = true; // Salir del bucle
 
                 } else {
-                    System.out.println("Número fuera de rango. Intente de nuevo.");
+                    System.out.println("Número fuera de rango. Intente de nuevo");
                 }
             } catch (java.util.InputMismatchException e) {
-                System.out.println("Entrada inválida. Debe ingresar un número.");
+                System.out.println("Entrada inválida. Debe ingresar un número");
                 sc.nextLine(); // Limpiar buffer
 
             }
@@ -616,7 +616,7 @@ public class App {
                 opcionEditar = sc.nextInt();
                 sc.nextLine(); // Limpiar buffer
             } catch (java.util.InputMismatchException e) {
-                System.out.println("Debe ingresar un número.");
+                System.out.println("Debe ingresar un número");
                 sc.nextLine(); // Limpiar buffer
                 return;
             }
@@ -844,18 +844,25 @@ public class App {
             System.out.println("Porfavor ingrese un nombre de ToDo valido para eliminar\n");
             return; //Sale del metodo
         }
+        // ---LIMPIAR HISTORIAL DE COMPLETADAS (en caso de que alguna tarea de este ToD0 este ahi) ---
+        // Antes de eliminar el ToD0, recorremos sus tareas
+        LinkedList<Tarea> tareasDelToDo = toDoselect.getTareas();
+        for (Tarea t : tareasDelToDo) {
+            // Si la tarea estaba completada, la eliminamos del historial
+            if (t.getStatus().equals("Completado")) {
+                historialCompletadas.eliminarCompletada(t);
+            }
+        }
 
         // Eliminar to-Do con iterator
         ListIterator<ToDo> it = listaToDos.listIterator();
 
         while (it.hasNext()) {
             ToDo todo = it.next();
-
             if (todo.getNameToDo().equalsIgnoreCase(nombreToDo)) {
                 it.remove(); // Eliminar con iterator
-                System.out.println("ToDo- '" + nombreToDo + "' eliminado exitosamente.");
+                System.out.println("ToDo- '" + nombreToDo + "' eliminado exitosamente");
                 historial.guardarEstado(listaToDos);
-
                 break;  //Si lo encuentra hace un break
             }
         }
