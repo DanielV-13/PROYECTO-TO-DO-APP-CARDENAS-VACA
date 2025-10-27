@@ -1,7 +1,7 @@
 TO-DO|UEES 🏫|2025-10-26
 TAREA|dEBER1|Alta|2025-08-09|Pendiente|-
 TAREA|DEBER2|Baja|2025-02-01|Pendiente|-
-TAREA|Deber3|Alta|2025-09-08|Completado|-
+TAREA|Deber3|Alta|2025-09-08|Pendiente|-
 ---
 TO-DO|deporte|2025-10-26
 TAREA|DEPORTeTAREA1|Media|2025-07-05|Pendiente|-

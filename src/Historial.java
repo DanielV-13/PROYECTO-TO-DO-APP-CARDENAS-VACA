@@ -43,7 +43,8 @@ public class Historial {
     }
 
     public void limpiarHistorial() {
-        pilaHistorial.clear();
+        pilaHistorial.clear(); //Limpia la pila de Deshacer
+        pilaRehacer.clear();   //  Limpia la pila de rehacer
         System.out.println("Historial limpiado");
     }
 
