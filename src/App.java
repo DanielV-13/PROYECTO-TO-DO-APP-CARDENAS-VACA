@@ -1006,14 +1006,15 @@ public class App {
         System.out.println("");
         System.out.println("  BÚSQUEDA Y FILTROS:");
         System.out.println("   11. Ver tareas por prioridad (TODOS)");
-        System.out.println("   12. Ver Histórico de tareas completadas");
-        System.out.println("   13. Buscar tareas por texto");
+        System.out.println("   12. Ver Tareas Globales por Estatus...");
+        System.out.println("   13. Ver Histórico de tareas completadas");
+        System.out.println("   14. Buscar tareas por texto");
         System.out.println("");
         System.out.println("  SISTEMA:");
-        System.out.println("   14. Deshacer ultima accion");
-        System.out.println("   15. Rehacer ultima accion");
-        System.out.println("   16. Limpiar historial de cambios");
-        System.out.println("   17. Guardar datos manualmente");
+        System.out.println("   15. Deshacer ultima accion");
+        System.out.println("   16. Rehacer ultima accion");
+        System.out.println("   17. Limpiar historial de cambios");
+        System.out.println("   18. Guardar datos manualmente");
         System.out.println("");
         System.out.println("    0. Salir");
         System.out.println("---------------------------------------------");
@@ -1060,24 +1061,31 @@ public class App {
                 case 9: editarTareaPendiente(); break;
                 case 10: removerTarea(); break;
                 case 11: verTareasPorPrioridad(); break;
-                case 12: System.out.println(historialCompletadas); break;
-                case 13: buscarTareasPorTexto(); break;
+                case 12:
+                    mostrarMenuFiltroStatus();
+                    break;
+                case 13:
+                    System.out.println(historialCompletadas);
+                    break;
                 case 14:
+                    buscarTareasPorTexto();
+                    break;
+                case 15:
                     LinkedList<ToDo> estadoAnterior = historial.deshacer();
                     if (estadoAnterior != null) {
                         listaToDos = estadoAnterior;
                         resincronizarHistorialCompletadas();
                     }
                     break;
-                case 15:
+                case 16:
                     LinkedList<ToDo> estadoSiguiente = historial.rehacer();
                     if (estadoSiguiente != null) {
                         listaToDos = estadoSiguiente;
                         resincronizarHistorialCompletadas();
                     }
                     break;
-                case 16: historial.limpiarHistorial(); break;
-                case 17: guardarDatos(); break;
+                case 17: historial.limpiarHistorial(); break;
+                case 18: guardarDatos(); break;
                 // --- CASE OCULTO (Codigo de acceso 100) ---
                 case 100: completarTareaConFechaManual(); break;
 
