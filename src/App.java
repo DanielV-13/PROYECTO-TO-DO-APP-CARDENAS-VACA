@@ -1144,37 +1144,57 @@ public class App {
                 case 5: eliminarToDo(); break;
                 case 6: crearTarea(); break;
                 case 7: completarTareaEspecifica(); break;
-                case 8: regresarTareaAPendiente(); break;
-                case 9: editarTareaPendiente(); break;
-                case 10: removerTarea(); break;
-                case 11: verTareasPorPrioridad(); break;
+                case 8:
+                    marcarTodoCompletoEnToDo();
+                    break;
+                case 9:
+                    regresarTareaAPendiente();
+                    break;
+                case 10:
+                    editarTareaPendiente();
+                    break;
+                case 11:
+                    removerTarea();
+                    break;
                 case 12:
-                    mostrarMenuFiltroStatus();
+                    limpiarCompletadasDeToDo();
                     break;
                 case 13:
-                    System.out.println(historialCompletadas);
+                    verTareasPorPrioridad();
                     break;
                 case 14:
-                    buscarTareasPorTexto();
+                    mostrarMenuFiltroStatus();
                     break;
                 case 15:
+                    System.out.println(historialCompletadas);
+                    break;
+                case 16:
+                    buscarTareasPorTexto();
+                    break;
+                case 17:
                     LinkedList<ToDo> estadoAnterior = historial.deshacer();
                     if (estadoAnterior != null) {
                         listaToDos = estadoAnterior;
                         resincronizarHistorialCompletadas();
                     }
                     break;
-                case 16:
+                case 18:
                     LinkedList<ToDo> estadoSiguiente = historial.rehacer();
                     if (estadoSiguiente != null) {
                         listaToDos = estadoSiguiente;
                         resincronizarHistorialCompletadas();
                     }
                     break;
-                case 17: historial.limpiarHistorial(); break;
-                case 18: guardarDatos(); break;
+                case 19:
+                    historial.limpiarHistorial();
+                    break;
+                case 20:
+                    guardarDatos();
+                    break;
                 // --- CASE OCULTO (Codigo de acceso 100) ---
-                case 100: completarTareaConFechaManual(); break;
+                case 100:
+                    completarTareaConFechaManual();
+                    break;
 
                 case 0:
                     System.out.println("\n Guardando datos en archivo...");
