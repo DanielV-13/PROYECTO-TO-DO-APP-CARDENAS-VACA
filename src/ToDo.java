@@ -81,7 +81,6 @@ public class ToDo {
     //--------------USAR COMPARATOR EJEMPLO EN CLASE-------------
     //3) Generar una vista de las Tareas pendientes (ORDENADAS CON PRIORITYQUEUE)
     public LinkedList<Tarea> verPendientes(){
-        System.out.println("------Tareas Pendientes (Ordenadas por Prioridad) -----\n");  //Variable local para almacenar tareas pendientes
 
         //Creo la lista que va a guardar las tareas pendientes en Desorden
             LinkedList<Tarea> pendientesDesordenados;
@@ -118,7 +117,7 @@ public class ToDo {
 
     //4) Generar una vista de las Tareas Completadas
     public LinkedList<Tarea> verCompletadas(){
-        System.out.println("------Tareas Completadas-----\n");  //Variable local para almacenar tareas pendientes
+
 
         //Creo la lista que va a devolver el metodo
         LinkedList<Tarea> completadas;
@@ -131,7 +130,6 @@ public class ToDo {
 
         completadas= listaAvanzada.buscar(new ComparatorStatus(), plantilla);
         return completadas;
-
     }
 
     //5) Generar una vista de las Tareas de una Prioridad dada

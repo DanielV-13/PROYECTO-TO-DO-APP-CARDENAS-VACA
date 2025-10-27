@@ -341,6 +341,8 @@ public class App {
     }
 
 
+
+
     //*** 6) MÉTOD0 OBLIGATORIO - Recuperar todas las tareas marcadas como hechas de todos los To-DO
     //Buscar todas las tareas cumplidas en un Lista de ToDos
     public void verTodasLasCompletadas(){
@@ -357,8 +359,7 @@ public class App {
 
         boolean encontroCompletadas = false; // Variable bandera para ver si hay completadas en la APP EN GENERAL
 
-        // Recorrer TODOS los ToDos con iterator
-        ListIterator<ToDo> itToDos = listaToDos.listIterator();
+        ListIterator<ToDo> itToDos = listaToDos.listIterator(); // Recorrer TODOS los ToDos con iterator
 
         //----BUCLE WHILE----
         while(itToDos.hasNext()) {
@@ -366,10 +367,8 @@ public class App {
 
             LinkedList<Tarea> resultado = toDo.verCompletadas();
 
-            if (resultado.isEmpty()) {
-                System.out.println("No hay tareas COMPLETADAS en el ToDo: " + toDo.getNameToDo());
-            } else {
-                System.out.println("Tareas COMPLETADAS en el ToDo " + toDo.getNameToDo());
+            if (!resultado.isEmpty()) {
+                System.out.println("Tareas COMPLETADAS en el ToDo: " + toDo.getNameToDo());
                 encontroCompletadas = true; //Variable local pasa a ser True
 
                 //Imprimir cada Tarea de la lista resultante
@@ -384,6 +383,42 @@ public class App {
         }
         System.out.println("---------------------------------------\n");
     }
+
+// Archivo: src/App.java (Añadir este nuevo método)
+
+    //------FUNCIONALIDAD EXTRA--------
+    // Ver TODAS las tareas PENDIENTES de TODOS los ToDos
+
+    public void verTodasLasPendientes() {
+        System.out.println("\n------- MOSTRANDO TODAS LAS TAREAS PENDIENTES -------");
+        if (listaToDos.isEmpty()) {
+            System.out.println("No hay listas de ToDo creadas.");
+            return;
+        }
+        boolean encontroPendientes = false;
+        ListIterator<ToDo> itToDos = listaToDos.listIterator();
+
+        while(itToDos.hasNext()) {
+            ToDo toDo = itToDos.next();
+            // Llama al métod0 modificado que devuelve la lista ordenada
+            LinkedList<Tarea> resultado = toDo.verPendientes();
+
+            if (!resultado.isEmpty()) {
+                encontroPendientes = true;
+                System.out.println("\n--- Tareas PENDIENTES en ToDo: " + toDo.getNameToDo() + " (Ordenadas por Prioridad) ---");
+                for (Tarea t : resultado) {
+                    System.out.println(t);
+                    System.out.println("---------------");
+                }
+            }
+        }
+
+        if (!encontroPendientes){
+            System.out.println("\nNO SE ENCONTRARON TAREAS PENDIENTES EN LA APP");
+        }
+        System.out.println("---------------------------------------------");
+    }
+
 
 
     //*** 7) Completar una tarea específica (Selección por Número) ***
@@ -771,12 +806,6 @@ public class App {
 
 
 
-
-
-
-
-
-
     //*** 8) Buscar tareas por texto en la descripción
     public void buscarTareasPorTexto(){
         System.out.print("\nIngrese el texto a buscar: ");
@@ -829,10 +858,8 @@ public class App {
             System.out.println("\nNo hay ToDos para eliminar.");
             return;
         }
-
         // Mostrar ToDos
         verToDos();
-
         // Pedir cuál eliminar
         System.out.print("Ingrese el nombre del ToDo a eliminar: ");
         String nombreToDo = sc.nextLine();
