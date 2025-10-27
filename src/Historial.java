@@ -3,10 +3,12 @@ import java.util.LinkedList;
 
 public class Historial {
     private Stack<LinkedList<ToDo>> pilaHistorial;
+    private Stack<LinkedList<ToDo>> pilaRehacer;
     private int limite;
 
     public Historial(){
         this.pilaHistorial = new Stack<>();
+        this.pilaRehacer = new Stack<>();
         this.limite = 20;
     }
 
@@ -23,10 +25,21 @@ public class Historial {
             System.out.println("No hay cambios para deshacer");
             return null;
         }
-        pilaHistorial.pop();
+        pilaRehacer.push(pilaHistorial.pop());
         LinkedList<ToDo> estadoAnterior = pilaHistorial.peek();
         System.out.println("Cambio deshecho (quedan " + pilaHistorial.size() + " en historial)");
         return copiarLista(estadoAnterior);
+    }
+
+    public LinkedList<ToDo> rehacer() {
+        if (pilaRehacer.size() == 0) {
+            System.out.println("No hay cambios para rehacer");
+            return null;
+        }
+        LinkedList<ToDo> estadoSiguiente = pilaRehacer.pop();
+        pilaHistorial.push(estadoSiguiente);
+        System.out.println("Cambio rehecho");
+        return copiarLista(estadoSiguiente);
     }
 
     public void limpiarHistorial() {
