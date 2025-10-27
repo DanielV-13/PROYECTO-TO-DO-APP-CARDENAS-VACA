@@ -536,6 +536,91 @@ public class App {
     }
 
 
+    //------FUNCIONALIDAD EXTRA (Usando ToD0.completarTodo)--------
+    // Marcar todas las tareas de un ToD0 específico como completadas
+
+    public void marcarTodoCompletoEnToDo() {
+        // --- 1. Seleccionar el ToD0 ---
+        if (listaToDos.isEmpty()) {
+            System.out.println("\nNo hay listas de ToDo disponibles.");
+            return;
+        }
+        verToDos();
+        System.out.print("Ingrese el nombre del ToDo cuyas tareas desea completar todas: ");
+        String nombreToDo = sc.nextLine();
+        ToDo toDoSeleccionado = buscarToDoNombre(nombreToDo);
+
+        if (toDoSeleccionado == null) {
+            System.out.println("No existe un ToDo con ese nombre");
+            return;
+        }
+
+        // --- 2. Identificar tareas que CAMBIARÁN a completadas ---
+        // Guardamos referencias a las tareas que actualmente están pendientes en este ToD0
+        LinkedList<Tarea> tareasACompletar = new LinkedList<>();
+        for (Tarea t : toDoSeleccionado.getTareas()) {
+            if (t.getStatus().equals("Pendiente")) {
+                tareasACompletar.add(t);
+            }
+        }
+
+        if (tareasACompletar.isEmpty()) {
+            System.out.println("\nEl ToDo '" + toDoSeleccionado.getNameToDo() + "' ya no tiene tareas pendientes por completar");
+            return;
+        }
+
+        // --- 3. Ejecutar la acción en el ToD0 ---
+        toDoSeleccionado.completarTodo(); // Llama al métod0 de la clase ToD0
+
+        // --- 4. Actualizar HistorialCompletadas ---
+        // Añadimos solo las tareas que acabamos de completar al historial
+        for (Tarea t : tareasACompletar) {
+            historialCompletadas.agregarCompletada(t);
+        }
+
+        // --- 5. Guardar estado para Deshacer ---
+        historial.guardarEstado(listaToDos);
+
+        System.out.println("\n Todas las tareas pendientes en '" + toDoSeleccionado.getNameToDo() + "' han sido marcadas como completadas");
+    }
+
+        //------FUNCIONALIDAD EXTRA (Integrando ToD0.eliminarCompletadas)--------
+    // Limpiar (eliminar permanentemente) las tareas completadas de un ToD0
+
+    public void limpiarCompletadasDeToDo() {
+        // --- 1. Seleccionar el ToD0 ---
+        if (listaToDos.isEmpty()) {
+            System.out.println("\nNo hay listas de ToDo disponibles.");
+            return;
+        }
+        verToDos();
+        System.out.print("Ingrese el nombre del ToDo del cual desea limpiar las tareas completadas: ");
+        String nombreToDo = sc.nextLine();
+        ToDo toDoSeleccionado = buscarToDoNombre(nombreToDo);
+
+        if (toDoSeleccionado == null) {
+            System.out.println("No existe un ToDo con ese nombre.");
+            return;
+        } //Con esto verificamos que si existe el ToD0
+
+        // --- 2. Ejecutar la acción en el ToD0 ---
+        toDoSeleccionado.eliminarCompletadas(); // Llama al métod0 de ToD0
+
+        // --- 3. Resincronizar HistorialCompletadas ---
+
+        resincronizarHistorialCompletadas(); // Reconstruye el historial basado en lo que QUEDÓ
+
+        // --- 4. Guardar estado para Deshacer ---
+        historial.guardarEstado(listaToDos);
+
+        System.out.println("\n Las tareas completadas en '" + toDoSeleccionado.getNameToDo() + "' han sido eliminadas permanentemente de la lista");
+    }
+
+
+
+
+
+
 
     //------FUNCIONALIDAD EXTRA--------
     //Regresar una Tarea Completada a la Lista de Pendientes
@@ -1000,21 +1085,23 @@ public class App {
         System.out.println("  GESTIÓN DE TAREAS:");
         System.out.println("    6. Crear nueva tarea");
         System.out.println("    7. Completar tarea específica");
-        System.out.println("    8. Regresar tarea completada a Pendiente");
-        System.out.println("    9. Editar tarea pendiente");
-        System.out.println("   10. Remover tarea específica");
+        System.out.println("    8. Marcar TODAS las tareas de un ToDo como completadas");
+        System.out.println("    9. Regresar tarea completada a Pendiente");
+        System.out.println("   10. Editar tarea pendiente");
+        System.out.println("   11. Remover tarea específica");
+        System.out.println("   12. Limpiar completadas de un ToDo");
         System.out.println("");
         System.out.println("  BÚSQUEDA Y FILTROS:");
-        System.out.println("   11. Ver tareas por prioridad (TODOS)");
-        System.out.println("   12. Ver Tareas Globales por Estatus...");
-        System.out.println("   13. Ver Histórico de tareas completadas");
-        System.out.println("   14. Buscar tareas por texto");
+        System.out.println("   13. Ver tareas por prioridad (TODOS)");
+        System.out.println("   14. Ver Tareas Globales por Estatus");
+        System.out.println("   15. Ver Histórico de tareas completadas");
+        System.out.println("   16. Buscar tareas por texto de la Descripcion");
         System.out.println("");
         System.out.println("  SISTEMA:");
-        System.out.println("   15. Deshacer ultima accion");
-        System.out.println("   16. Rehacer ultima accion");
-        System.out.println("   17. Limpiar historial de cambios");
-        System.out.println("   18. Guardar datos manualmente");
+        System.out.println("   17. Deshacer ultima accion");
+        System.out.println("   18. Rehacer ultima accion");
+        System.out.println("   19. Limpiar historial de cambios");
+        System.out.println("   20. Guardar datos manualmente");
         System.out.println("");
         System.out.println("    0. Salir");
         System.out.println("---------------------------------------------");
