@@ -143,7 +143,7 @@ próxima vez que abras la aplicación.
 
 | Indicador | Valor |
 |-----------|-------|
-| Commits totales | 2 |
+| Commits totales | 46 |
 | Issues/PRs fusionados | 0 / 0 |
 | Cobertura de pruebas | N/A |
 | Última actualización | 2025-10-27 |
